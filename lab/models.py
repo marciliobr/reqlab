@@ -221,7 +221,7 @@ class Item(models.Model):
 
     class Meta:
         verbose_name = 'item'
-        verbose_name_plural = 'itens'
+        verbose_name_plural = 'classe de itens'
         ordering = ('nome', )
 
     def __str__(self):
@@ -286,7 +286,7 @@ class Ferramenta(models.Model):
 
     tombo = models.CharField(
         max_length=10,
-        help_text='Número patrimônial da ferramenta',
+        help_text='Número patrimônial do bem',
         verbose_name='Tombo',
         blank=False,
         null=False,
@@ -296,21 +296,21 @@ class Ferramenta(models.Model):
     observacao = models.TextField(
         max_length=400,
         blank=True,
-        help_text='Observação relevante sobre a ferramenta',
+        help_text='Observação relevante sobre a bem',
         verbose_name='Observações',
     )
 
     status = models.PositiveSmallIntegerField(
         db_index=True,
         choices=STATUS_BASICO.choices,
-        help_text='Situação do ferramenta',
+        help_text='Situação do bem',
         verbose_name='Status',
         default=STATUS_BASICO.ATIVO,
     )
 
     class Meta:
-        verbose_name = 'ferramenta'
-        verbose_name_plural = 'ferramentas'
+        verbose_name = 'bem permanente'
+        verbose_name_plural = 'bens permanentes'
 
     def __str__(self):
         return '{0} - (TOMBO: {1})'.format(str(self.item), self.tombo)
@@ -751,7 +751,7 @@ class HistoricoEstoque(models.Model):
 
     class Meta:
         verbose_name = 'Evento de Estoque'
-        verbose_name_plural = 'Histórico do Estoque de Materias'
+        verbose_name_plural = 'Movimentação no Estoque de Bens de Consumo'
         ordering = ('-data_hora',)
 
     def save(self, *args, **kwargs):
