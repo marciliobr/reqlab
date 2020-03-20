@@ -4,18 +4,18 @@
         <div class="description">{{ fieldset.description|safe }}</div>
     {% endif %}
     {% for line in fieldset %}
-        <div class="form-row{% if line.fields|length_is:'1' and line.errors %} errors{% endif %}{% if not line.has_visible_field %} hidden{% endif %}{% for field in line %}{% if field.field.name %} field-{{ field.field.name }}{% endif %}{% endfor %}">
-            {% if line.fields|length_is:'1' %}{{ line.errors }}{% endif %}
+        <div class="form-row{% if line.fields|length_is:'1' and line.errors %} errors text-danger{% endif %}{% if not line.has_visible_field %} hidden{% endif %}{% for field in line %}{% if field.field.name %} field-{{ field.field.name }}{% endif %}{% endfor %}">
+            
             {% for field in line %}
-                <div {% if not line.fields|length_is:'1' %} class="form-group  fieldBox{% if field.field.name %} field-{{ field.field.name }}{% endif %}{% if not field.is_readonly and field.errors %} errors{% endif %}{% if field.field.is_hidden %} hidden{% endif %}"{% elif field.is_checkbox %} class="checkbox-row"{% endif %}>
+                <div {% if not line.fields|length_is:'1' %} class="form-group fieldBox{% if field.field.name %} field-{{ field.field.name }}{% endif %}{% if not field.is_readonly and field.errors %} errors{% endif %}{% if field.field.is_hidden %} hidden{% endif %}"{% elif field.is_checkbox %} class="checkbox-row"{% endif %}>
                     {% if not line.fields|length_is:'1' and not field.is_readonly %}{{ field.errors }}{% endif %}
                     {% if field.is_checkbox %}
-                        {{ field.field }}{{ field.label_tag }}
+                       {{ field.field }}{{ field.label_tag }}
                     {% else %}
                         <div class="control-label mt-3"><strong>{{ field.label_tag}}</strong></div>
                         <div class="admin">
                         {% if field.is_readonly %}
-                            <div class="readonly">{{ field.contents }}</div>
+                            <div class="text-dark">{{ field.contents }}</div>
                         {% else %}
                             {{ field.field }}
                         {% endif %}
@@ -27,6 +27,7 @@
                     {% endif %}
                 </div>
             {% endfor %}
+            {% if line.fields|length_is:'1' %}{{ line.errors }}{% endif %}
         </div>
     {% endfor %}
 </fieldset>
