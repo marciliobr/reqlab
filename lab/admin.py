@@ -108,6 +108,7 @@ class AvisoAdmin(admin.ModelAdmin):
 @admin.register(ConfigLab)
 class ConfigLabAdmin(admin.ModelAdmin):
     list_display = ('configuracao', 'valor')
+    readonly_fields = ('configuracao',)
 
     # Desabilitar delete
 
