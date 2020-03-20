@@ -1,0 +1,82 @@
+{% extends "lab/layout.html"%}
+{%block css_page %}
+<style>
+    /* Chrome, Safari, Edge, Opera */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* Firefox */
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+</style>
+{% endblock %}
+
+{% block conteudo %}
+<h4 class="fa mb-4 text-secondary"><i class="fas fa-folder-open p-1" style="color:#ad850b"></i>MINHAS
+    REQUISIÇÕES - {{request.session.escopo_nome|upper}}</h4>
+
+<ul class="list-group">
+    {% for requisicao in requisicoes %}
+    <li class="list-group-item border border-secondary m-1 shadow">
+        <i class="fas text-secondary">
+            <i class="fas fa-edit p-1" style="color:#ad850b"></i>
+            REQUISIÇÃO (ID: {{requisicao.id}})</i>
+        <section class="row shadow-lg border-top border-warning pt-2 pb-1 mb-1 small">
+            <div class="col-md-auto  col-sm-10"> <b>Status: <i
+                        class="border border-{{requisicao.status_class}} rounded p-1">{{requisicao.status_string}}</i></b>
+            </div>
+            <div class="col-md-auto  col-sm-10"><b>Data: </b> {{requisicao.data}}</div>
+            <div class="col-md-auto  col-sm-10"><b>Horário: </b> De {{requisicao.hora_inicio}} às
+                {{requisicao.hora_fim}}</div>
+            <div class="col-md-auto  col-sm-10"><b>Professor:</b> {{requisicao.professor}}</div>
+            <div class="col-md-auto  col-sm-10"><b>Disciplina: </b>{{requisicao.disciplina}}</div>
+            <div class="col-md-auto  col-sm-10"><b>Tipo de Atividade: </b>{{requisicao.tipo_atividade_string}}</div>
+            <div class="col-md-auto  col-sm-10"><b>Laboratório: </b>{{requisicao.laboratorio}}</div>
+            <div class="col-md-auto  col-sm-10"><b>Quantidade de Alunos: </b> {{requisicao.qt_alunos}}</div>
+        </section>
+        <section>
+            <a class="badge badge-warning p-2 mb-1 mr-3" data-toggle="modal" data-target="#d_{{requisicao.id}}" href=#>
+                <i class="fas fa-search"></i>
+                Detalhes</a>
+            {% if requisicao.status_cancelavel %}
+            <a class="badge badge-dark p-2 mr-1 mb-1" data-toggle="modal" data-target="#o_{{requisicao.id}}" href="#">
+                <i class="fas fa-comment-alt text-secondary"></i>
+                Adicionar Observação </a>
+            <a class="badge badge-dark p-2 mb-1 mr-1" data-toggle="modal" data-target="#c_{{requisicao.id}}" href="#">
+                <i class="fas fa-eraser text-danger"></i>
+                Cancelar </a>
+            {% endif %}
+            {% if requisicao.status_finalizavel %}
+            <a class="badge badge-dark p-2" data-toggle="modal" data-target="#f_{{requisicao.id}}" href="#">
+                <i class="fas fa-stop-circle text-warning"></i>
+                Finalizar</a>
+            {% endif %}
+        </section>
+    </li>
+
+    {% include "lab/includes/modal_cancelamento.html" %}
+    {% include "lab/includes/modal_detalhamento.html" %}
+    {% include "lab/includes/modal_add_observacao.html" %}
+    {% include "lab/includes/modal_finalizacao.html" %}
+    {% empty %}
+    <li class="list-group-item">
+        <span class="list-group-item list-group-item-action list-group-item-secondary">
+            Nenhuma requisição encontrada!
+        </span>
+    </li>
+    {% endfor %}
+</ul>
+<br>
+{% with requisicoes as paginated %}
+{% include "lab/includes/paginator.html" %}
+{% endwith %}
+{% endblock %}
+
+
+{% block scripts %}
+{% include "lab/includes/funcoes_modal.html" %}
+{% endblock %}

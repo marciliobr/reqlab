@@ -1,0 +1,69 @@
+{% extends "lab/layout.html"%}
+{% block conteudo %}
+<!--Cabeçalho-->
+<div class="d-flex row justify-content-between mb-5">
+    <h4 class="fa text-secondary"><i class="fas fa-list p-1" style="color:#ad850b"></i>
+        RELATÓRIO GERAL DE ESTOQUE - {{request.session.escopo_nome|upper}}
+    </h4>
+    {%if not is_to_print %}
+    <a class="btn btn-warning mb-1" target="_blank" href="{% url 'report_estoque_geral' %}?print=True"><i
+            class="fa fa-print" aria-hidden="true"></i> Imprimir</a>
+    {%endif%}
+</div>
+
+<div>
+    <!--Material de Consumo-->
+    <a data-toggle="collapse" data-target="#consumo" href="#" class="fas text-secondary"><i class="fas fa-oil-can p-1" style="color:#ad850b"></i> MATERIAL DE CONSUMO &downdownarrows;</a>
+    <section class="border-top border-warning p-2 mb-3 shadow">
+        <div {% if not is_to_print %} id="consumo" class="collapse" {% endif %}>
+            <ul class="list-group">
+                {% for item in itens_consumo %}
+                    <li class="list-group-item d-flex justify-content-left align-items-center border">{{item}}<small class="text-muted" > ({{item.descricao}})</small>
+                        <span class="badge badge-warning badge p-2 mx-3">{{item.estoque}} <small>{{item.unidade.codigo}}</small></span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
+
+
+    <!--Material Permanente-->
+    <a data-toggle="collapse" data-target="#permanente" href="#" class="fas text-secondary"><i class="fas fa-wrench p-1" style="color:#ad850b"></i> BENS PERMANENTES &downdownarrows;</a>
+    <section class="border-top border-warning p-2 mb-3 shadow">
+        <div {% if not is_to_print %} id="permanente" class="collapse" {% endif %}>
+            <ul class="list-group">
+                {% for item in itens_permanente %}
+                <li class="list-group-item d-flex justify-content-left align-items-center border">
+                    <span>
+                        {{item}}<small class="text-muted" > ({{item.descricao}})</small></small>
+                    </span>
+                    <span class="badge badge-warning badge p-2 mx-3">{{item.estoque}} <small>{{item.unidade.codigo}}</small></span>
+                    <span class="small">
+                    
+                    {% if item.ferramentas.all%}
+                        <a data-toggle="collapse" data-target="#tombos_{{item.id}}" href="#" class="fas text-secondary"> COMPOSIÇÃO &downdownarrows;</a>                        
+                        <div {% if not is_to_print %} id="tombos_{{item.id}}" class="collapse" {% endif %}>
+                            <ul class="list-group">
+                            {% for ferramenta in item.ferramentas.all %}
+                                <li class="list-group-item dark p-1 border">TOMBO: <b>{{ferramenta.tombo}} </b> - {{ferramenta.observacao}}</li>
+                            {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                        
+                    
+                </span>   
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
+    
+{%endblock%}
+
+
+{% block scripts %}
+    {%if is_to_print %}
+        <script>Imprimir();function Imprimir(){window.print();}</script>
+    {%endif%}
+{%endblock%}

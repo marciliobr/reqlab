@@ -1,0 +1,53 @@
+{% extends "lab/layout.html" %}
+{% load static %}
+
+{% block conteudo %}
+<div class="d-flex container-fluid extend">
+    {% if not request.user_agent.is_mobile %}
+    <div class="col mx-0 ">
+        <img src="{% static 'images/logo_vertical.png' %}" class="img-fluid gradiente" alt="Logo do Ifba"
+            style="border-radius: 15px;">
+    </div>
+    {% endif %}
+    <div class="col-md-7">
+        <h1 class="mb-0">REQLAB</h1>
+        <h5 class="mt-0 mb-3 text-secondary">(Sistema de Requisições aos Laboratórios)</h5>
+        <h4 class="fa my-4 text-secondary"><i class="fas fa-rss" style="color:#ad850b"></i>
+            QUADRO DE AVISOS</h4>
+        <ul class="list-group">
+
+            {% for aviso in quadro_avisos %}
+            <div class="alert alert-{%if aviso.importante %}danger {% else %}warning{%endif%} alert-dismissible fade show"
+                role="alert">
+                <strong>{{aviso.titulo}}</strong><br>{{aviso.mensagem}}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% empty %}
+            <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+                <strong>Nenhum aviso cadastrado no momento!</strong> Ao utilizar o sistema sempre verifique este quadro,
+                poderá haver algum aviso importante!
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+
+        </ul>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+    
+    {% if limpar_cesta %}
+    <script>
+        sessionStorage.clear();
+    </script>
+        
+    {% endif %}
+        
+
+
+
+{% endblock %}

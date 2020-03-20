@@ -1,0 +1,25 @@
+<button type="button" class="btn btn-sm btn-block border border-warning gradiente p-1 mb-1" style="max-width: 15em"
+    data-toggle="modal" data-target="#d_{{req.id}}">
+
+
+    <span class="lab-warning-hover fas text-sm-center text-nowrap d-inline-block text-truncate" style="max-width: 12em">
+        {%if req.tipo_atividade == 1%}
+        <i class="fa fa-chalkboard-teacher text-warning" aria-hidden="true"></i>
+        {%else%}
+        <i class="fa fa-project-diagram text-info" aria-hidden="true"></i>
+        {%endif%}
+        <i class="text-warning"> {{req.laboratorio.codigo}}</i><br>
+
+
+        {{req.disciplina}}<br>
+        {{req.hora_inicio}} - {{req.hora_fim}}<br>
+        <i class="fas fa-file p-1 text-{{req.status_class}}"></i>
+        {{req.status_string}}<br>
+
+    </span>
+
+</button>
+<!--Modal-->
+{% with req as requisicao %}
+{% include "lab/includes/modal_detalhamento.html" %}
+{% endwith %}

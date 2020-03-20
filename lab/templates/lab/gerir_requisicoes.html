@@ -1,0 +1,86 @@
+{% extends "lab/layout.html"%}
+{%block css_page %}
+<style>
+    /* Chrome, Safari, Edge, Opera */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* Firefox */
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+</style>
+{% endblock %}
+
+{% block conteudo %}
+<div class="d-flex row justify-content-between">
+    <h4 class="fa mb-4 text-secondary"><i class="fas fa-diagnoses p-1" style="color:#ad850b"></i>GERENCIAMENTO DE
+        REQUISIÇÕES - {{request.session.escopo_nome|upper}}</h4>
+    <div class="btn-group row p-3 mx-4">
+        {% for i in '1234'|make_list %}
+        <a class="btn btn-sm mb-1 {% if filtro == i %} btn-light border-dark disabled {%else%} btn-dark{% endif %}"
+            href="{%url 'gerir_requisicoes' %}?filter={{i}}">
+            {% cycle 'Requeridas' 'Aprovadas' 'Atendidas' 'Encerradas' %}
+        </a>
+        {% endfor %}
+    </div>
+</div>
+<ul class="list-group">
+    {% for requisicao in requisicoes %}
+    <li class="list-group-item border border-secondary px-3 py-2 m-1 shadow">
+        <i class="fas text-secondary">
+            <i class="fas fa-edit" style="color:#ad850b"></i>
+            REQUISIÇÃO (ID: {{requisicao.id}})</i><br />
+        <div class="d-flex row align-items-start justify-content-between">
+            <section class="col-sm-1 mt-3 mx-0 text-right">
+                <a class="badge badge-dark" href="{% url 'requisicao_detalhes' requisicao.id %}"><i
+                        class="far fa-folder-open fa-2x text-warning" aria-hidden="true"></i> </a>
+            </section>
+
+            <section class="col-md-11 row border-top border-warning pt-2 mx-0 pb-1 mb-1 small">
+                <div class="col-md-auto col-sm-9"> <b>Status: <i
+                            class="border border-{{requisicao.status_class}} rounded p-1">{{requisicao.status_string}}</i></b>
+                </div>
+                <div class="col-md-auto  col-sm-9"><b>Data: </b> {{requisicao.data}}</div>
+                <div class="col-md-auto  col-sm-9"><b>Horário: </b> De {{requisicao.hora_inicio}} às
+                    {{requisicao.hora_fim}}</div>
+                <div class="col-md-auto  col-sm-9"><b>Professor:</b> {{requisicao.professor}}</div>
+                <div class="col-md-auto  col-sm-9"><b>Disciplina: </b>{{requisicao.disciplina}}</div>
+                <div class="col-md-auto  col-sm-9"><b>Tipo de Atividade: </b>{{requisicao.tipo_atividade_string}}</div>
+                <div class="col-md-auto  col-sm-9"><b>Laboratório: </b>{{requisicao.laboratorio}}</div>
+                <div class="col-md-auto  col-sm-9"><b>Quantidade de Alunos: </b> {{requisicao.qt_alunos}}</div>
+            </section>
+        </div>
+
+    </li>
+    {% empty %}
+    <li class="list-group-item">
+        <span class="list-group-item list-group-item-action list-group-item-secondary">
+            Nenhuma requisição encontrada!
+        </span>
+    </li>
+    {% endfor %}
+
+</ul>
+<br>
+{% with requisicoes as paginated %}
+{% with filtro as second_filter %}
+{% include "lab/includes/paginator.html" %}
+{% endwith %}
+{% endwith %}
+{% endblock %}
+
+<script>
+    var radios = document.querySelectorAll('input[type=radio][name="optradio"]');
+
+    function changeHandler(event) {
+        console.log(this.value)
+    }
+
+    Array.prototype.forEach.call(radios, function (radio) {
+        radio.addEventListener('change', changeHandler);
+    });
+</script>

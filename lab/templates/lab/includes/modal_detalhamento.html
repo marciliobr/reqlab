@@ -1,0 +1,107 @@
+<div class="modal fade" id="d_{{requisicao.id}}" tabindex="-1" role="dialog" aria-labelledby="detalhes da requisicao">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header gradiente">
+                <h6 class="modal-title light"><i class="fas fa-search p-1" style="color:#FFC107"></i> DETALHES
+                    REQUISIÇÃO &rarrw; <em class="text-warning"> (ID:{{requisicao.id}})</em></h6>
+                <button type="button" class="close text-warning" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body bg-light small">
+
+                <!--Requisicção-->
+                <i class="fas text-secondary"><i class="fas fa-file p-1" style="color:#ad850b"></i> REQUISIÇÃO </i>
+                <section class="border-top border-warning p-2 mb-3">
+                    <b>ID: </b> {{requisicao.id}} <br />
+                    <b>Escopo: </b> {{requisicao.escopo}} <br />
+                    <b>Status: </b> <strong class="text-{{requisicao.status_class}}">{{requisicao.status_string}}</strong> <br />
+                </section>
+
+                <!--Formulário da Requisição-->
+                <i class="fas text-secondary"><i id="title-logo" class="fas fa-edit p-1" style="color:#ad850b"></i>
+                    DADOS DO FORMULÁRIO</i>
+                <section class="border-top border-warning p-2 mb-3">
+                    <b>Professor:</b> {{requisicao.professor}} <br />
+                    <b>Disciplina: </b>{{requisicao.disciplina}} <br />
+                    <b>Tipo de Atividade: </b>{{requisicao.tipo_atividade_string}} <br />
+                    {% if mostrar %}<b>Prática: </b>{{requisicao.pratica}} <br />{% endif %}
+                    <b>Laboratório: </b>{{requisicao.laboratorio}} <br />
+                    <b>Data: </b> {{requisicao.data}} <br />
+                    <b>Horário: </b> De {{requisicao.hora_inicio}} às {{requisicao.hora_fim}}<br />
+                    <b>Quantidade de Alunos: </b> {{requisicao.qt_alunos}}<br />
+                    <b>Precisa o técnico estar presente?: </b>
+                    {% if requisicao.precisa_tecnico %}Sim{% else %}Não{%endif%} <br />
+                    {% if mostrar %}
+                    <b>Roteiro: </b>
+                    {% if requisicao.roteiro %}
+                    <a href="../../media/{{ requisicao.roteiro}}" target="_blank">{{requisicao.roteiro}}</a>
+                    {% else %}
+                    &varnothing; <em>(sem roteiro)</em>
+                    {%endif%} <br />
+                    <b>Observações: </b>
+                    {% if requisicao.observacoes %}
+                    <small>{{requisicao.observacoes}}</small>
+                    {% else %}
+                    &varnothing; <em>(sem observações)</em>
+                    {%endif%} <br />
+                    {% endif %}
+                </section>
+                {% if mostrar %}
+                <!--Historico-->
+                <a data-toggle="collapse" data-target="#historico_{{ requisicao.id }}" href="#"><i
+                        class="fas text-secondary"><i class="fas fa-history p-1" style="color:#ad850b"></i> HISTÓRICO
+                        &downdownarrows; </i></a>
+                <section class="border-top border-warning p-2 mb-3">
+                    <div id="historico_{{ requisicao.id }}" class="collapse">
+                        <ol class="list">
+                            {% for acao in requisicao.historico %}
+                            <li> {{acao}} </li>
+                            {% endfor %}
+                        </ol>
+                    </div>
+                </section>
+
+                <!--Itens Solicitados-->
+
+                <a data-toggle="collapse" data-target="#itens_requeridos_{{ requisicao.id }}" href="#"><i
+                        class="fas text-secondary"><i class="fas fa-tools p-1" style="color:#ad850b"></i> ITENS
+                        SOLICITADOS/APROVADOS/DEVOLVIDOS &downdownarrows; </i></a>
+                <section class="border-top border-warning p-2 mb-3">
+                    <div id="itens_requeridos_{{ requisicao.id }}" class="collapse">
+                        {% with requisicao as requisicao %}
+                        {% include 'lab/includes/frame_itens_requisitados.html' %}
+                        {% endwith %}
+                    </div>
+                </section>
+
+
+                <!--Ocorrencias-->
+                <i class="fas text-secondary"><i class="fas fa-flag-checkered p-1" style="color:#ad850b"></i>
+                    OCORRÊNCIAS </i>
+                <section class="border-top border-warning p-2 mb-3">
+                    {% if requisicao.ocorrencias %}
+                    <small>{{requisicao.ocorrencias}}</small>
+                    {% else %}
+                    &varnothing; <em class="">(sem ocorrências)</em>
+                    {%endif%} <br />
+
+                </section>
+                {% endif %}
+                <!--Aviso-->
+                {% if not mostrar  %}
+                <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+                    <strong>Informação Protegida!</strong> Você não é o responsável por esta requisição, portando dados
+                    mais detalhados foram ocultados.
+                </div>
+                {% endif %}
+
+            </div>
+            <div class="modal-footer gradiente">
+                <a class="btn btn-outline-warning" href="{% url 'requisicao_detalhes' requisicao.id %}"><i
+                        class="fa fa-search" aria-hidden="true"></i> Visualizar na Página</a>
+                <a class="btn btn-outline-warning" target="_blank"
+                    href="{% url 'requisicao_detalhes' requisicao.id %}?print=True"><i class="fa fa-print"
+                        aria-hidden="true"></i> Imprimir</a>
+            </div>
+        </div>
+    </div>
+</div>

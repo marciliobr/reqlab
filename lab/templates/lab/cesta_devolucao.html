@@ -1,0 +1,142 @@
+{% extends "lab/layout.html" %}
+{% load static %}
+{% block css_page %}
+
+{% endblock %}
+
+{% block conteudo %}
+<div class="d-flex row align-items-start  justify-content-between mb-2">
+  <h4 class="fa mb-4 text-secondary"><i id="title-logo" class="fas fa-shopping-basket p-1" style="color:#ad850b"></i>
+    ITENS DEVOLVIDOS - PÓS ATENDIMENTO</h4>
+  <div class="row flex-row-reverse justify-content-center">
+    <button type="button" class="btn btn-dark p-2 mb-1 order-1" onclick="devolver()">
+      <i class="fas fa-clipboard-check text-warning" aria-hidden="true"></i>
+      Confirmar Atendimento
+    </button>
+    <button type="button" class="btn btn-warning mr-3 mb-1 order-2" data-toggle="collapse"
+      data-target="#section-comentario">
+      <i class="fas fa-comments text-dark"></i>
+      Adicionar Observação</button>
+  </div>
+</div>
+
+<!--Observação-->
+<section id="section-comentario" class="collapse">
+  <i class="fas text-secondary"><i class="fas fa-comments p-1" style="color:#ad850b"></i>OBSERVAÇÃO A ADICIONAR </i>
+  <div class="border-top border-warning p-2 mb-3">
+    <div class="form-row">
+      <div class="col-12">
+        <textarea id="add_observacao" type="text" class="form-control" rows="5" maxlength="300" name="observacao"
+          required></textarea>
+        <small><i class="float-right text-right text-secondary"> (máximo de 300 caracteres)</i></small>
+      </div>
+    </div>
+  </div>
+
+</section>
+<i class="fas text-secondary"><i class="fas fa-tools p-1" style="color:#ad850b"></i> ITENS SOLICITADOS/APROVADOS </i>
+<section class="border-top border-warning p-2 mb-3">
+
+  <!--Lista de Intens Solicitados-->
+  <div id="lista-solicitados" class="mb-4">
+    <ul class="list-group">
+      {% if requisicao.itens%}
+      {% for item_r in requisicao.itens_requisitados %}
+      <li id="item-requisitado-{{item_r.item.id}}"
+        class="list-group-item list-group-item-secondary mb-1 pt-0 pb-1 px-2">
+        <div class="d-flex row justify-content-between">
+          <div class="col-md-5">
+            <small class="fa text-secondary mx-1">ITEM</small><br />
+            <i
+              class="fas {%if item_r.item.tipo == 1 %} fa-wrench text-success{%else%} fa-oil-can text-info {%endif%} "></i>
+            {{item_r.item.nome}}<small class="text-muted"> ({{item_r.item.descricao}})</small>
+          </div>
+          <div class="col-md-3 d-flex justify-content-between text-center">
+            <div class="px-2">
+              <small class="fa text-secondary">SOLICITADO</small><br />
+              {{item_r.solicitado}}<small class="text-muted">/{{item_r.estoque}}</small>
+            </div>
+            <div class="px-2">
+              <small class="fa text-secondary">ESTOQUE</small><br />
+              {{item_r.item.estoque}}<i class="small text-secondary"> {{item_r.item.unidade.codigo}}</i>
+            </div>
+
+
+            <div class="px-2">
+              <small class="fa text-secondary">APROVADO</small><br />
+              <strong>{{item_r.aprovado}}</strong>
+              {% if item_r.c_aprovado %}
+              <i class="fas fa-comment-dots text-info" data-toggle="tooltip" data-placement="top"
+                title="{{item_r.c_aprovado}}"></i>
+              {% endif %}
+            </div>
+          </div>
+          <div class="col-md-1 text-left">
+            <small class="fa">DEVOLVIDO</small><br />
+            <input class="form-control item_" style="max-width: 8em;" id_item={{item_r.item.id}} type="number" min="0"
+              max="{{item_r.aprovado}}" value="{%if item_r.item.tipo == 1 %}{{item_r.aprovado}}{%else%}0{%endif%}">
+          </div>
+          <div class="col-md-auto">
+            <small class="fa text-secondary">COMENTÁRIO</small><br />
+            <input id="comentario_{{item_r.item.id}}" class="form-control input-sm" type="text">
+          </div>
+        </div>
+      </li>
+      {% endfor %}
+      {% else %}
+      <li class="list-group-item list-group-item-dark mb-1 pt-0 pb-1 px-2">
+        <i class="fas fa-asterisk    ">
+          Nenhum item solicitado pelo requisitante!
+        </i>
+      </li>
+      {% endif %}
+
+    </ul>
+  </div>
+</section>
+<section>
+  <form id="form-devolucao" onsubmit="carregar_dados();" method="post" action="{%url 'requisicao_devolver'%}"
+    novalidate>
+    {% csrf_token %}
+    <input id="form-devolucao-id" name="id" type="hidden" value="{{requisicao.id}}">
+    <input id="form-devolucao-itens" name="itens_devolvidos" type="hidden">
+    <input id="form-devolucao-observacao" name="observacao" type="hidden">
+  </form>
+
+  {% endblock %}
+
+  {% block scripts %}
+  <script>
+    //Abilitar tooltips
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+    })
+
+
+    function devolver() {
+      var f_form = document.getElementById("form-devolucao");
+      var f_itens = document.getElementById("form-devolucao-itens");
+      var f_observacao = document.getElementById("form-devolucao-observacao");
+
+      var item_id = ''
+      var itens = '';
+      Array.from(document.getElementsByClassName('item_')).forEach(function (item, index) {
+        item_id = item.getAttribute('id_item')
+        itens += '{"id":"' + item_id + '",';
+        itens += '"devolvido":"' + item.value + '", ';
+        itens += '"c_devolvido":"' + document.getElementById('comentario_' + item_id).value + '"},';
+      });
+      if (itens != '') {
+        itens = '[' + itens.substring(0, (itens.length - 1)) + ']';
+      }
+
+      var add_observacao = document.getElementById("add_observacao");
+      f_itens.value = itens;
+      f_observacao.value = add_observacao !== null ? add_observacao.value : ''
+
+      f_form.submit();
+
+    }
+  </script>
+
+  {% endblock %}

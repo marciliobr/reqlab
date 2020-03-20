@@ -1,0 +1,54 @@
+<style>
+  .page-link {
+    color: #FFF;
+    background-color: #4d4d4d;
+    border: 1px solid #E0A800;
+  }
+
+  .page-item.disabled .page-link {
+    color: #888374;
+    pointer-events: none;
+    background-color: #6d6d6d;
+  }
+
+  .page-item.active .page-link {
+    z-index: 1;
+    color: #333;
+    background-color: #E0A800;
+    border-color: #4d4d4d;
+  }
+
+  .page-link:focus,
+  .page-link:hover {
+    color: #fff;
+    background-color: #ddb230;
+  }
+</style>
+{% if paginated.has_other_pages %}
+<ul class="pagination justify-content-center">
+  {% if paginated.has_previous %}
+
+  <li class="page-item">
+    <a class="page-link"
+      href="?page={{ paginated.previous_page_number }}{% if second_filter %}&filter={{second_filter}}{% endif %}">&laquo;</a>
+  </li>
+  {% else %}
+  <li class="page-item disabled"><a class="page-link">&laquo;</a></li>
+  {% endif %}
+  {% for page in paginated.paginator.page_range %}
+  {% if paginated.number == page %}
+  <li class="page-item active"><a class="page-link">{{ page }}</a></li>
+  {% else %}
+  <li class="page-item"><a class="page-link"
+      href="?page={{ page }}{% if second_filter %}&filter={{second_filter}}{% endif %}">{{ page }}</a></li>
+  {% endif %}
+  {% endfor %}
+  {% if paginated.has_next %}
+  <li class="page-item"><a class="page-link"
+      href="?page={{ paginated.next_page_number }}{% if second_filter %}&filter={{second_filter}}{% endif %}">&raquo;</a>
+  </li>
+  {% else %}
+  <li class="page-item disabled"><a class="page-link">&raquo;</a></li>
+  {% endif %}
+</ul>
+{% endif %}

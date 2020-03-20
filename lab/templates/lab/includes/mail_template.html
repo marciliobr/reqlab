@@ -1,0 +1,70 @@
+{% spaceless %}
+<!DOCTYPE html>
+
+<html lang="pt-br">
+
+<head>
+    <title> REQLAB | Envio automático de e-mail</title>
+    <meta name="description"
+        content="E-mail gerado de forma automática pelo REQLAB, com finalidade de acompanhamento das ações realizadas no sistema" />
+    <meta name="author" content="REQLAB" />
+    <meta name="generator" content="REQLAB" />
+    <meta charset="UTF-8" />
+    <style>
+        body {
+            font-size: large;
+        }
+
+        i {
+            font-size: small;
+            color: #444;
+        }
+
+        a {
+            color: #815f0a;
+        }
+    </style>
+</head>
+
+<body>
+    <h3>{{message}}</h3><br />
+
+    {% if tipo == 1 %}
+    <b>ID: </b>{{objeto.id}} <br />
+    <b>Status: </b>{{objeto.status_string}} <br />
+    <b>Professor: </b>{{objeto.professor}} <br />
+    <b>Tipo de Atividade: </b>{{objeto.tipo_atividade_string}} <br />
+    <b>Disciplina: </b>{{objeto.disciplina}} <br />
+    <b>Data: </b> {{objeto.data}} <br />
+    <b>Horário: </b> De {{objeto.hora_inicio}} às {{objeto.hora_fim}} <br />
+    <br />Veja mais detalhes em: <a href="{{url_site}}{{objeto.get_absolute_url}}"> REQLAB - Requisição ID nº
+        {{objeto.id}}</a>
+    {% endif %}
+
+    {% if tipo == 2 %}
+    <b>Matrícula: </b>{{objeto.username}} <br />
+    <b>Nome Completo: </b>{{objeto.get_full_name}} <br />
+    <b>E-mail: </b>{{objeto.email}} <br />
+    <b>Escopo Padrão: </b>{{objeto.escopo_default}} <br />
+    <b>Último Login: </b>{{objeto.last_login}} <br />
+    {% endif %}
+
+    {% if tipo == 3 %}
+    <b>Matrícula: </b>{{objeto.username}} <br />
+    <b>Nome Completo: </b>{{objeto.get_full_name}} <br />
+    <b>E-mail: </b>{{objeto.email}} <br />
+    <b>Data de Registro: </b>{{objeto.date_joined}} <br />
+    <br />Veja mais detalhes em: <a href="{{url_site}}/admin/lab/usuario/{{objeto.id}}/change/"> REQLAB - Revisar
+        Usuário Mátricula {{objeto.username}}</a>
+    {% endif %}
+
+    <br /><br />
+    <p>
+        <b><i>ATENÇÃO! Este e-mail foi gerado de forma automática pelo Sistema REQLAB, não é necessário
+                respondê-lo.</i></b>
+    </p>
+
+</body>
+
+</html>
+{% endspaceless %}

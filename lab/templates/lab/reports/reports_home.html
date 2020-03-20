@@ -1,0 +1,17 @@
+{% extends "lab/layout.html"%}
+{% block conteudo %}
+<h4 class="fa mb-4 text-secondary"><i class="fas fa-list p-1" style="color:#ad850b"></i>RELATÓRIOS - {{request.session.escopo_nome|upper}}</h4>
+    <ul class="list-group">
+        <li class="list-group-item border border-secondary px-3 py-2 m-1 shadow">
+            <i class="fas text-secondary mr-3">
+                <i class="fab fa-linode" style="color:#ad850b"></i>
+                ESTOQUE GERAL DE ITENS</i>
+            <a class="btn btn-sm btn-dark text-light mx-3 my-1" href="{% url 'report_estoque_geral' %}">
+                <i class="fas fa-share"></i>
+                Abrir</a>
+            <a class="btn btn-sm btn-warning my-1" target="_blank" href="{% url 'report_estoque_geral'%}?print=True">
+                <i class="fas fa-print"></i>
+                Imprimir</a>
+        </li>
+    </ul> 
+{% endblock %}

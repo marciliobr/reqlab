@@ -1,0 +1,156 @@
+{% extends "lab/layout.html" %}
+{% load static %}
+{% block conteudo %}
+<h4 class="fa mb-4 text-secondary"><i id="title-logo" class="fas fa-tools p-1" style="color:#ad850b"></i>
+    SELECIONE OS ITENS NECESSÁRIOS</h4>
+<div class="row d-md-flex flex-row-reverse justify-content-between">
+
+    <!--Caixa de Pesquisa-->
+    <div class="col-md-7 col-sm-12 order-2 my-3">
+        
+        {% with ocultar_estoque=True  %}
+            {% include 'lab/includes/caixa_pesquisa_itens.html' %}    
+        {% endwith %}
+            
+        
+    </div>
+
+    <!--Cesta-->
+    <div class="col-md-auto rounded px-3 py-1 order-1">
+        <div class="row d-md-flex flex-row-reverse justify-content-end align-items-end">
+            <i class="fas fa-shopping-basket order-2 px-3 text-secondary">ITENS SELECIONADOS:</i>
+            <a href="{% url 'requisicao' %}" class="btn btn-dark text-light mx-3 mb-3 order-1"><i
+                    class="fas fa-edit text-warning"></i> Ir para Requisição</a>
+        </div>
+        <div id="cesta" class="my-1 border border-warning rounded "></div>
+        <div class="button-group">
+            <button type="button" class="btn btn-sm btn-dark m-1" data-toggle="modal" data-target="#modal_salvar_cesta"
+                href="#">
+                <i class="fas fa-file-upload text-warning "></i>
+                Salvar Cesta </button>
+            <button type="button" class="btn btn-sm btn-dark m-1" data-toggle="modal"
+                data-target="#modal_carregar_cesta" href="#">
+                <i class="fas fa-file-download text-warning "></i>
+                Carregar Cesta </button>
+            <button type="button" class="btn btn-warning m-1"
+                onclick="sessionStorage.clear();Atualizar_Cesta(); document.getElementById('cesta').innerHTML= ' ';">
+                <i class="fas fa-trash-alt text-dark "></i>
+                Limpar Cesta </button>
+
+        </div>
+    </div>
+</div>
+
+{% include "lab/includes/modal_carregar_cesta.html" %}
+{% include "lab/includes/modal_salvar_cesta.html" %}
+
+
+
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    Atualizar_Cesta()
+
+    function Atualizar_Cesta() {
+
+        HTML = '<ul class="list-group">';
+
+        Object.keys(sessionStorage).forEach(function (key) {
+            var eq = JSON.parse(sessionStorage.getItem(key));
+
+            HTML +=
+                '<li class = "list-group-item shadow m-1 d-flex justify-content-between align-items-center">';
+            HTML += '<span class="d-inline-block text-truncate" style="max-width: 15rem;"><i class="pr-1 fas '
+            if (eq.tipo == 1) {
+                HTML += 'fa-wrench text-success"></i> ';
+            } else {
+                HTML += 'fa-oil-can text-info"></i>';
+            }
+
+            HTML += eq.nome;
+            HTML += '</span><span>';
+            if (eq.quantidade <= eq.estoque) {
+
+                HTML += '<i class="badge gradiente mx-1">' + eq.quantidade + " " + eq.unidade + '</i>';
+                HTML += '<i class="text-success fas fa-check"></i>';
+            } else {
+                HTML += '<small><i class="text-danger ml-2">Estoque excedido</i></small>';
+                HTML += '<i class="badge badge-danger mx-1">' + eq.quantidade + " " + eq.unidade + '</i>';
+                HTML += '<i class="text-danger fas fa-exclamation"></i>';
+
+            }
+
+            HTML += '<i class="btn far fa-trash-alt mr-2 excluir-item" onclick="Remover_Eq(' + eq.id +
+                ')"+></i>'
+            HTML += '</span>';
+            HTML += "</li>";
+        });
+        HTML += "</ul>";
+        document.getElementById("cesta").innerHTML = HTML;
+        salvar_cesta_get_itens();
+    }
+
+    function Remover_Eq(id) {
+        sessionStorage.removeItem('eq_' + id);
+        Atualizar_Cesta();
+    }
+
+    function AddItem(id, nome, descricao, tipo, unidade, quantidade, estoque) {
+        console.log(quantidade)
+        var qt = parseInt(quantidade, 10);
+        var new_eq = JSON.parse(sessionStorage.getItem("eq_" + id));
+        if (!new_eq) {
+            if (qt > 0) {
+                var eq = {
+                    "id": id,
+                    "nome": nome,
+                    "quantidade": qt,
+                    "tipo": tipo,
+                    "unidade": unidade,
+                    "estoque": estoque
+                };
+                sessionStorage.setItem("eq_" + id, JSON.stringify(eq));
+            }
+        } else {
+            var eq = {
+                "id": id,
+                "nome": nome,
+                "quantidade": qt + new_eq.quantidade,
+                "tipo": tipo,
+                "unidade": unidade,
+                "estoque": estoque
+            };
+            if (eq.quantidade > 0) {
+                sessionStorage.setItem("eq_" + id, JSON.stringify(eq));
+            } else {
+                sessionStorage.removeItem("eq_" + id);
+            }
+        }
+
+        Atualizar_Cesta();
+    }
+
+    $(document).ready(function () {
+        $('.excluir-cesta').tooltip({
+            title: "Apagar cesta!",
+            animation: true
+        });
+        $('.excluir-item').tooltip({
+            title: "Remover item!",
+            animation: true
+        });
+        //desabilitar o enter
+        $('input').keypress(function (e) {
+            var code = null;
+            code = (e.keyCode ? e.keyCode : e.which);
+            return (code == 13) ? false : true;
+        });
+
+    });
+</script>
+
+{% include "lab/includes/funcoes_modal.html" %}
+
+{% endblock %}

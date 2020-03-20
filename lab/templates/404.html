@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Página não encontrada</title>
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <style>
+    body{
+        background: var(--dark)!important;
+        text-align: center;
+    }
+    
+    .blink_me {
+        animation: blinker 0.5s linear infinite;
+      }
+      @keyframes blinker {
+        100% {
+          opacity: 0.7;
+        }
+      }
+</style>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+    integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+
+
+
+</head>
+<body>
+  
+  <h1 class="bg-dark rounded p-2">
+    <i class="fas fa-bug text-warning fa-4x mt-5 mb-3 blink_me"></i><br>
+     <span class="my-3 text-light text-center">PÁGINA NÃO ENCONTRADA</span><br/>
+     <a class="btn btn-warning my-5" href="{% url 'home' %}" >Me leve de volta</a>    
+ </h1>
+  
+</body>
+</html>
+
+
+
+
+

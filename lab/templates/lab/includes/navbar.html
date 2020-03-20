@@ -1,0 +1,120 @@
+{% load static %}
+<nav class="navbar navbar-toggleable-md navbar-expand-sm navbar-dark sticky-top gradiente"
+    style="background-color:#e3f2fd;">
+    <a href="{% url 'home' %}" class="navbar-brand mr-5"><strong class="text-warning">REQLAB</strong><small> IFBA
+            (Irecê)</small></a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+        data-target="#collapsibleNavbar" aria-controls="collapsibleNavbar" aria-expanded="false" aria-label="Menu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Links -->
+    <div class="navbar-collapse collapse justify-content-between" id="collapsibleNavbar">
+        <ul class="navbar-nav mr-auto">
+            {% if user.is_authenticated %}
+            {% if request.session.escopo_id %}
+            <li class="nav-link">
+                <a class="btn btn-outline-warning btn-block" href="{% url 'cesta' %}">Nova Requisição</a>
+            </li>
+
+            <li class="nav-link">
+                <a class="btn btn-outline-warning btn-block" href="{% url 'lista_requisicoes' %}"> Minhas
+                    Requisições</a>
+            </li>
+
+            <li class="nav-link">
+                <a class="btn btn-outline-warning btn-block" href="{% url 'calendario' %}">Calendário</a>
+            </li>
+            {%endif%}    
+            <!-- Escopo -->
+            <li class="dropdown nav-link">
+                
+                <a class="btn btn-dark btn-block dropdown-toggle text-warning" data-toggle="dropdown" href="#">
+                    <span class="text-sm-center small text-nowrap d-inline-block text-truncate"
+                    style="max-width: 200px;">                
+                    {% if request.session.escopo_id %}
+                       <small class="text-light">ESCOPO:</small> {{request.session.escopo_nome}}
+                    {%else%}
+                        Selecione um Escopo
+                    {% endif %}
+                 
+                </span></a>
+                <ul class="dropdown-menu border border-secondary bg-dark p-1">
+                    
+                    {% for escopo in user.get_escopos  %}
+                       
+                       {% if escopo.id != request.session.escopo_id  %}
+                                                  
+                       <li><a class="lab-light-hover btn btn-sm btn-outline-warning btn-block text-warning mb-1"
+                        href="{% url 'home'%}?escopo={{escopo.id}}">{{escopo}}</a></li>    
+
+                           
+                       {% endif %}
+                    {% endfor %}
+
+                </ul>
+            </li>
+            {% if user.is_staff %}
+            <li class="dropdown nav-link mx-2">
+                <a class="btn btn-warning btn-block dropdown-toggle " data-toggle="dropdown" href="#">
+                    Gerenciar
+                    <span class="caret"></span></a>
+                <ul class="dropdown-menu border border-secondary bg-warning p-1">
+                    
+                    {% if request.session.escopo_id %}
+                    <li><a class="lab-light-hover btn gradiente btn-block text-warning mb-1"
+                        href="{% url 'gerir_requisicoes'%}">Requisições</a></li>
+                <li><a class="lab-light-hover btn gradiente btn-block text-warning mb-1"
+                        href="{% url 'reports_home' %}">Relatórios</a>
+                </li>    
+                    {% endif %}
+                        
+                    
+                    <li><a class="lab-light-hover btn gradiente btn-block text-warning"
+                            href="{% url 'admin:app_list' app_label='lab'%}">Painel Administrativo</a></li>
+                </ul>
+            </li>
+            {% endif %}
+            {% endif %}
+        </ul>
+
+        <!--Login-->
+        {% if user.is_authenticated %}
+        <form id="logoutForm" action="/logout/" method="post" class="navbar-right">
+            {% csrf_token %}
+            <ul class="nav navbar-nav navbar-right mx-2">
+                <li class="dropdown nav-link">
+                    <a class="btn btn-warning btn-block dropdown-toggle pt-2" data-toggle="dropdown" href="#">
+                        <span class="caret text-sm-center text-nowrap d-inline-block text-truncate"
+                            style="max-width: 400px;">
+                            <i class="far fa-user-circle mr-1"></i>
+                            <small class='text-dark'> <b class="mr-1">{{ user.get_short_name|upper }}</b><i
+                                    class="text-muted">({{ user.username}})</i></small>
+                        </span>
+                    </a>
+                    <ul class="dropdown-menu border border-secondary bg-warning p-2">
+                        <li class='small mb-2 shadow'><b>Nome completo:</b><br />{{user.get_full_name}}</li>
+                        <li class='small mb-2 shadow'><b>E-mail:</b><br />{{user.email}}</li>
+                        <li class='small mb-2 shadow'><b>Último Login:</b> <br />{{user.last_login}}</li>
+                        <li><a class="lab-light-hover btn gradiente btn-block text-warning mb-3 shadow"
+                                href="{% url 'edit_user'%}">Editar Meus Dados</a></li>
+                        <!--Botão Logout-->
+                        <li><a class="lab-warning-hover gradiente btn btn-block"
+                                href="javascript:document.getElementById('logoutForm').submit()">
+                                <i class="fas fa-power-off"></i>Logoff
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </form>
+
+        {% else %}
+
+        <ul class="nav navbar-nav navbar-right">
+            <li><a class="btn btn-warning" href="{% url 'login' %}">Log in</a></li>
+        </ul>
+
+        {% endif %}
+    </div>
+</nav>

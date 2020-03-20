@@ -1,0 +1,14 @@
+[{"model": "auth.group", "pk": 1, "fields": {"name": "users_default", "permissions": []}},       
+ {"model": "lab.configlab", "pk": 1, "fields": {"configuracao": 1, "valor": 5}},
+ {"model": "lab.configlab", "pk": 2, "fields": {"configuracao": 2, "valor": 1}},
+ {"model": "lab.configlab", "pk": 3, "fields": {"configuracao": 3, "valor": 1}},
+ {"model": "lab.configlab", "pk": 4, "fields": {"configuracao": 6, "valor": 1}},
+ {"model": "lab.configlab", "pk": 5, "fields": {"configuracao": 7, "valor": 0}},
+ {"model": "lab.configlab", "pk": 6, "fields": {"configuracao": 4, "valor": 1}},
+ {"model": "lab.configlab", "pk": 7, "fields": {"configuracao": 5, "valor": 1}},
+ {"model": "lab.configlab", "pk": 8, "fields": {"configuracao": 9, "valor": 1}},
+ {"model": "lab.configlab", "pk": 9, "fields": {"configuracao": 10, "valor": 1}},
+ {"model": "lab.configlab", "pk": 10, "fields": {"configuracao": 11, "valor": 1}},
+ {"model": "lab.configlab", "pk": 11, "fields": {"configuracao": 12, "valor": 0}},
+ {"model": "lab.configlab", "pk": 12, "fields": {"configuracao": 8, "valor": 2359}}   
+]

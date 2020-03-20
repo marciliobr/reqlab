@@ -1,0 +1,299 @@
+/*Para o Nav */
+:root {
+     
+     --vermelho-ifba: #cd191e;
+     --verde-ifba: #2f9e41;
+     
+    /* --cor-principal: #4d4d4d; */
+     --cor-principal: var(--dark);
+     --cor-sub-principal: var(--secondary);
+     --cor-contraste: var(--warning);
+    
+   }
+
+.gradiente {
+            background-color: var(--cor-principal);
+            /* Old browsers */
+            background-image: -moz-radial-gradient(center, ellipse cover, var(--cor-sub-principal) 0%, var(--cor-principal) 100%);
+            /* FF3.6+ */
+            background-image: -webkit-radial-gradient(center, ellipse cover, var(--cor-sub-principal) 0%, var(--cor-principal) 100%);
+            /* Chrome10+,Safari5.1+ */
+            background-image: -o-radial-gradient(center, ellipse cover, var(--cor-sub-principal) 0%, var(--cor-principal) 100%);
+            /* Opera 12+ */
+            background-image: -ms-radial-gradient(center, ellipse cover, var(--cor-sub-principal) 0%, var(--cor-principal) 100%);
+            /* IE10+ */
+            background-image: radial-gradient(ellipse at center, var(--cor-sub-principal) 0%, var(--cor-principal) 100%);
+            color: #fff;
+            /* IE6-9 fallback on horizontal gradient */
+            filter:progid: DXImageTransform.Microsoft.gradient( startColorstr="var(--cor-sub-principal)", endColorstr="var(--cor-principal)",GradientType=1);
+}
+
+body{
+     font-family: 'Bitter', serif!important;
+
+}
+
+.lab-warning-hover:hover{
+     color: var(--warning)!important;
+}
+
+a.lab-light-hover:hover{
+     color: var(--light)!important;
+}
+
+.btn{
+     border-radius: 12px;
+}
+
+.admin label {
+     box-sizing:border-box;
+     color:rgb(33, 37, 41);
+     cursor:default;
+     display:inline-block;
+     font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+     font-size:16px;
+     font-weight:400;
+     height:24px;
+     line-height:24px;
+     margin-bottom:4px;
+     text-align:left;
+     text-size-adjust:100%;
+     width:68.4688px;
+     -webkit-tap-highlight-color:rgba(0, 0, 0, 0);    
+}
+
+.admin select {
+align-items:center;
+background-clip:padding-box;
+background-color:rgb(255, 255, 255);
+border-bottom-color:rgb(206, 212, 218);
+border-bottom-left-radius:4px;
+border-bottom-right-radius:4px;
+border-bottom-style:solid;
+border-bottom-width:1px;
+border-image-outset:0px;
+border-image-repeat:stretch;
+border-image-slice:100%;
+border-image-source:none;
+border-image-width:1;
+border-left-color:rgb(206, 212, 218);
+border-left-style:solid;
+border-left-width:1px;
+border-right-color:rgb(206, 212, 218);
+border-right-style:solid;
+border-right-width:1px;
+border-top-color:rgb(206, 212, 218);
+border-top-left-radius:4px;
+border-top-right-radius:4px;
+border-top-style:solid;
+border-top-width:1px;
+box-sizing:border-box;
+color:rgb(73, 80, 87);
+cursor:default;
+font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+font-size:16px;
+font-stretch:100%;
+font-style:normal;
+font-variant-caps:normal;
+font-variant-east-asian:normal;
+font-variant-ligatures:normal;
+font-variant-numeric:normal;
+font-weight:400;
+height:38px;
+letter-spacing:normal;
+line-height:normal;
+margin-bottom:0px;
+margin-left:0px;
+margin-right:0px;
+margin-top:0px;
+overflow-wrap:normal;
+overflow-x:visible;
+overflow-y:visible;
+padding-bottom:6px;
+padding-left:12px;
+padding-right:12px;
+padding-top:6px;
+text-align:start;
+text-indent:0px;
+text-rendering:auto;
+text-shadow:none;
+text-size-adjust:100%;
+text-transform:none;
+transition-delay:0s, 0s;
+transition-duration:0.15s, 0.15s;
+transition-property:border-color, box-shadow;
+transition-timing-function:ease-in-out, ease-in-out;
+white-space:pre;
+width:279px;
+word-spacing:0px;
+writing-mode:horizontal-tb;
+-webkit-appearance:menulist-button;
+-webkit-rtl-ordering:logical;
+-webkit-tap-highlight-color:rgba(0, 0, 0, 0);
+}
+
+.admin input{
+ background-clip:padding-box;
+background-color:rgb(255, 255, 255);
+border-bottom-color:rgb(206, 212, 218);
+border-bottom-left-radius:4px;
+border-bottom-right-radius:4px;
+border-bottom-style:solid;
+border-bottom-width:1px;
+border-image-outset:0px;
+border-image-repeat:stretch;
+border-image-slice:100%;
+border-image-source:none;
+border-image-width:1;
+border-left-color:rgb(206, 212, 218);
+border-left-style:solid;
+border-left-width:1px;
+border-right-color:rgb(206, 212, 218);
+border-right-style:solid;
+border-right-width:1px;
+border-top-color:rgb(206, 212, 218);
+border-top-left-radius:4px;
+border-top-right-radius:4px;
+border-top-style:solid;
+border-top-width:1px;
+box-sizing:border-box;
+color:rgb(73, 80, 87);
+cursor:text;
+font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+font-size:16px;
+font-stretch:100%;
+font-style:normal;
+font-variant-caps:normal;
+font-variant-east-asian:normal;
+font-variant-ligatures:normal;
+font-variant-numeric:normal;
+font-weight:400;
+height:38px;
+letter-spacing:normal;
+line-height:24px;
+margin-bottom:0px;
+margin-left:0px;
+margin-right:0px;
+margin-top:0px;
+overflow-x:visible;
+overflow-y:visible;
+padding-bottom:6px;
+padding-left:12px;
+padding-right:12px;
+padding-top:6px;
+text-align:start;
+text-indent:0px;
+text-rendering:auto;
+text-shadow:none;
+text-size-adjust:100%;
+text-transform:none;
+transition-delay:0s, 0s;
+transition-duration:0.15s, 0.15s;
+transition-property:border-color, box-shadow;
+transition-timing-function:ease-in-out, ease-in-out;
+width:597px;
+word-spacing:0px;
+writing-mode:horizontal-tb;
+-webkit-appearance:none;
+-webkit-rtl-ordering:logical;
+-webkit-tap-highlight-color:rgba(0, 0, 0, 0);
+}
+
+.admin textarea {
+background-clip:padding-box;
+background-color:rgb(255, 255, 255);
+border-bottom-color:rgb(206, 212, 218);
+border-bottom-left-radius:4px;
+border-bottom-right-radius:4px;
+border-bottom-style:solid;
+border-bottom-width:1px;
+border-image-outset:0px;
+border-image-repeat:stretch;
+border-image-slice:100%;
+border-image-source:none;
+border-image-width:1;
+border-left-color:rgb(206, 212, 218);
+border-left-style:solid;
+border-left-width:1px;
+border-right-color:rgb(206, 212, 218);
+border-right-style:solid;
+border-right-width:1px;
+border-top-color:rgb(206, 212, 218);
+border-top-left-radius:4px;
+border-top-right-radius:4px;
+border-top-style:solid;
+border-top-width:1px;
+box-sizing:border-box;
+color:rgb(73, 80, 87);
+cursor:text;
+display:block;
+flex-direction:column;
+font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+font-size:16px;
+font-stretch:100%;
+font-style:normal;
+font-variant-caps:normal;
+font-variant-east-asian:normal;
+font-variant-ligatures:normal;
+font-variant-numeric:normal;
+font-weight:400;
+height:62px;
+letter-spacing:normal;
+line-height:24px;
+margin-bottom:0px;
+margin-left:0px;
+margin-right:0px;
+margin-top:0px;
+overflow-wrap:break-word;
+overflow-x:auto;
+overflow-y:auto;
+padding-bottom:6px;
+padding-left:12px;
+padding-right:12px;
+padding-top:6px;
+resize:vertical;
+text-align:start;
+text-indent:0px;
+text-rendering:auto;
+text-shadow:none;
+text-size-adjust:100%;
+text-transform:none;
+transition-delay:0s, 0s;
+transition-duration:0.15s, 0.15s;
+transition-property:border-color, box-shadow;
+transition-timing-function:ease-in-out, ease-in-out;
+white-space:pre-wrap;
+width:597px;
+word-spacing:0px;
+writing-mode:horizontal-tb;
+-webkit-appearance:none;
+-webkit-rtl-ordering:logical;
+-webkit-tap-highlight-color:rgba(0, 0, 0, 0);
+font-size: small;
+}
+
+.vCheckboxLabel{
+     margin-top: 2rem;
+}
+
+.timezonewarning{
+     color: var(--danger);
+     font-style: italic;
+     font-size: small;
+}
+
+.admin a {
+     color: var(--secondary);
+}
+
+.admin .readonly {
+     color: var(--secondary);
+     font-size: small;
+
+}
+
+.admin .titulo{
+     text-transform: uppercase;
+     font-size: small;
+}
+

@@ -1,0 +1,82 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block content %}
+<div class="d-flex row justify-content-between">
+    <div class="col-md-5" id="content-main">
+        {% if app_list %}
+        {% for app in app_list %}
+
+        <caption class="fas text-secondary"><i class="fas fa-file p-1" style="color:#ad850b"></i>
+            <a class="text-secondary" href="{{ app.app_url }}">{{ app.name |upper }}</a>
+        </caption>
+        <div class="border-top border-warning p-2 mb-3">
+            <ul class="list-group">
+                {% for model in app.models %}
+                <li class="list-group-item border border-secondary m-1 shadow">
+                    <div class="mb-1">{{ model.name |upper }}</div>
+
+                    <a class="badge badge-warning p-2 mx-1" href="{{ model.admin_url }}">
+                        <i class="fas fa-folder-open text-dark"></i>
+                        Abrir
+                    </a>
+                    {% if model.add_url %}
+                    <a class="badge badge-dark p-2 mx-1" href="{{ model.add_url }}">
+                        <i class="fas fa-plus-square text-warning"></i>
+                        Adicionar
+                    </a>
+                    {%endif%}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>{% trans 'You don’t have permission to view or edit anything.' %}</p>
+        {% endif %}
+    </div>
+
+
+
+
+    <div class="col-md-auto" id="content-related">
+        <div class="module" id="recent-actions-module">
+            <caption class="fas text-secondary"><i class="fas fa-file p-1" style="color:#ad850b"></i>
+                <i class="text-secondary">AÇÕES RECENTENTES<small class="text-muted"> (10 últimas)</small></a>
+            </caption>
+            <div class="small border-top border-warning p-2 mb-3">
+                {% load log %}
+                {% get_admin_log 10 as admin_log for_user user%}
+                {% if not admin_log %}
+                <p>{% trans 'None available' %}</p>
+                {% else %}
+                <ul class="list p-0">
+                    {% for entry in admin_log %}
+                    <li class="list-group-item m-1 shadow">
+                        <i
+                            class="btn-dark mr-1 rounded p-1 fas  {% if entry.is_addition %}fa-plus text-success {% endif %}{% if entry.is_change %}fa-pen text-warning{% endif %}{% if entry.is_deletion %}fa-minus text-danger{% endif %}"></i>
+                        {% if entry.content_type %}
+                        <span
+                            class="text-muted">({% filter capfirst %}{{ entry.content_type.name }}{% endfilter %})</span>
+                        {% else %}
+                        <span class="text-muted">({% trans 'Unknown content' %})</span>
+                        {% endif %}
+                        <b>{{ entry.object_repr }}</b>
+
+                        {% if not entry.is_deletion and entry.get_admin_url %}
+                        <a class="badge badge-warning p-2 ml-2" href="{{ entry.get_admin_url }}">
+                            <i class="fas fa-folder-open text-dark"></i>
+                            Abrir
+                        </a>
+                        {% endif %}
+
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

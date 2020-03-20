@@ -1,0 +1,18 @@
+{% extends "lab/layout.html" %}
+{%block conteudo %}
+<div class="d-flex row align-items-start justify-content-between mb-2">
+  <h4 class="fa mb-4 text-secondary">
+    <i class="fas fa-calendar p-1 ml-3" style="color:#ad850b"></i>
+    AGENDA DE REQUISIÇÕES  - {{request.session.escopo_nome|upper}}
+  </h4>
+  <div>
+    <a href="{% url 'calendario' ano=ano_anterior mes=mes_anterior %}" class="btn btn-warning ml-3">
+      <i class="fa fa-step-backward" aria-hidden="true"></i> Mês Anterior</a>
+    <a href="{% url 'calendario' ano=ano_proximo mes=mes_proximo %}" class="btn btn-warning m-1">Próximo Mês
+      <i class="fa fa-step-forward" aria-hidden="true"></i></a>
+  </div>
+</div>
+<div class="m-1 nopadding">
+  {{calendario}}
+</div>
+{% endblock %}

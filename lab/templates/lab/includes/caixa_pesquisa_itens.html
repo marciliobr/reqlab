@@ -1,0 +1,63 @@
+{% if itens %}
+<!--Caixa de Pesquisa-->
+<span class="d-flex row my-2 ml-1">
+  <i id="search-icon" class="fas fa-search p-1" style="color: #444;" aria-hidden="true"></i>
+  <input id="caixa-pesquisa" class="form-control-plaintext col-10 border border-warning rounded p-1" type="text"
+    placeholder="Filtrar">
+</span>
+
+<!--Lista de Resultado-->
+<div id="lista-resultado">
+  <ul class="list-group">
+    {% for item in itens %}
+    <li id="item-resultado-{{item.id}}" class="list-group-item py-1 px-1">
+      <span class="list-group-item list-group-item-action list-group-item-secondary shadow py-1 px-1">
+        <div class="row justify-content-between">
+          <div class="col-md-8">
+            <span class="text-dark">
+              <i class="fas {% if item.tipo == 1 %} fa-wrench {% else %} fa-oil-can {%endif%} text-secondary"></i>
+              {{item.nome}}
+              <small class="text-muted"> ({{item.descricao}})</small><br />
+              {% if item.estoque > 0 %}
+                {% if not ocultar_estoque %}
+                  <small><i class='text-info'><b>{{item.estoque}}</b>{{item.unidade.codigo}} em estoque</i></small>
+                 {% endif %} 
+              {%else%}
+              <small><i class='text-danger'>Sem estoque!</i></small>
+              {%endif%}
+            </span>
+          </div>
+          <div class="col-md-auto">
+            <div class="input-group">
+              <input id="{{item.id}}" type="number" class="form-control border border-dark" value='1' style="width:5rem"
+                placeholder="Quantidade" aria-label="Quantidade">
+              <div class="input-group-append">
+                <button class="btn {% if item.estoque > 0 %} btn-dark {% else %} btn-danger {%endif%} btn-sm"
+                  type="button"
+                  onclick="AddItem('{{item.id}}','{{item.nome}}','{{item.descricao}}','{{item.tipo}}', '{{item.unidade.codigo}}', document.getElementById('{{item.id}}').value, '{{item.estoque}}')">
+                  <i class="far fa-plus-square"></i>
+                  <i><small>{{item.unidade.descricao}}</small></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </span>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% else %}
+<span class="list-group-item list-group-item-action list-group-item-secondary mt-2">Nenhum item cadastrado!</span>
+{% endif %}
+
+<script>
+  $(document).ready(function () {
+    $("#caixa-pesquisa").on("keyup", function () {
+      var value = $(this).val().toLowerCase();
+      $("#lista-resultado li").filter(function () {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+  });
+</script>

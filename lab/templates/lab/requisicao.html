@@ -1,0 +1,335 @@
+{% extends "lab/layout.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block conteudo %}
+<h4 class="fa mb-4 text-secondary"><i class="fas fa-edit p-1" style="color:#ad850b"></i> REQUISIÇÃO DE USO DO
+    LABORATÓRIO - {{request.session.escopo_nome|upper}}</h4>
+
+<form method="post" action="{% url 'requisicao'%}" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    {% for hidden_field in form.hidden_fields %}
+    {{ hidden_field }}
+    {% endfor %}
+
+    {% if form.non_field_errors %}
+    <div class="alert alert-danger" role="alert">
+        {% for error in form.non_field_errors %}
+        {{ error }}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+
+
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label>{{form.professor.label}}</label>
+            {% if form.is_bound %}
+            {% if form.professor.errors %}
+            {% render_field form.professor class="form-control is-invalid" %}
+            {% for error in form.professor.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+            {% else %}
+            {% render_field form.professor class="form-control is-valid" %}
+            {% endif %}
+            {% else %}
+            {% render_field form.professor class="form-control" %}
+            {% endif %}
+        </div>
+
+        <div class="form-group col-md-6">
+            <label>{{form.disciplina.label}}</label>
+            {% if form.is_bound %}
+            {% if form.disciplina.errors %}
+            {% render_field form.disciplina class="form-control is-invalid" %}
+            {% for error in form.disciplina.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+            {% else %}
+            {% render_field form.disciplina class="form-control is-valid" %}
+            {% endif %}
+            {% else %}
+            {% render_field form.disciplina class="form-control" %}
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-md-3">
+            <label>{{form.tipo_atividade.label}}</label>
+            {% if form.is_bound %}
+            {% if form.tipo_atividade.errors %}
+            {% render_field form.tipo_atividade class="form-control is-invalid" %}
+            {% for error in form.tipo_atividade.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+            {% else %}
+            {% render_field form.tipo_atividade class="form-control is-valid" %}
+            {% endif %}
+            {% else %}
+            {% render_field form.tipo_atividade class="form-control" %}
+            {% endif %}
+        </div>
+
+        <div class="form-group col-md-9">
+            <label>{{form.pratica.label}}</label>
+            {% if form.is_bound %}
+            {% if form.pratica.errors %}
+            {% render_field form.pratica class="form-control is-invalid" rows="2" %}
+            {% for error in form.pratica.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+            {% else %}
+            {% render_field form.pratica class="form-control is-valid" rows="2" %}
+            {% endif %}
+            {% else %}
+            {% render_field form.pratica class="form-control" rows="2" %}
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label>{{form.laboratorio.label}}</label>
+            {% if form.is_bound %}
+            {% if form.laboratorio.errors %}
+            {% render_field form.laboratorio class="form-control is-invalid" type="date" %}
+            {% for error in form.laboratorio.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+            {% else %}
+            {% render_field form.laboratorio class="form-control is-valid" type="date" %}
+            {% endif %}
+            {% else %}
+            {% render_field form.laboratorio class="form-control" type="date" %}
+            {% endif %}
+        </div>
+
+        <div class="form-group col-md-2">
+            <label>{{form.data.label}}</label>
+            {% if form.is_bound %}
+            {% if form.data.errors %}
+            {% render_field form.data class="form-control is-invalid" type="date" %}
+            {% for error in form.data.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+            {% else %}
+            {% render_field form.data class="form-control is-valid" type="date" %}
+            {% endif %}
+            {% else %}
+            {% render_field form.data class="form-control" type="date" %}
+            {% endif %}
+        </div>
+
+        <div class="form-group col-md-2">
+            <label>{{form.hora_inicio.label}}</label>
+            {% if form.is_bound %}
+            {% if form.hora_inicio.errors %}
+            {% render_field form.hora_inicio class="form-control is-invalid" type="time" %}
+            {% for error in form.hora_inicio.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+            {% else %}
+            {% render_field form.hora_inicio class="form-control is-valid" type="time" %}
+            {% endif %}
+            {% else %}
+            {% render_field form.hora_inicio class="form-control" type="time" %}
+            {% endif %}
+        </div>
+
+        <div class="form-group col-md-2">
+            <label>{{form.hora_fim.label}}</label>
+            {% if form.is_bound %}
+            {% if form.hora_fim.errors %}
+            {% render_field form.hora_fim class="form-control is-invalid" type="time" %}
+            {% for error in form.hora_fim.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+            {% else %}
+            {% render_field form.hora_fim class="form-control is-valid" type="time" %}
+            {% endif %}
+            {% else %}
+            {% render_field form.hora_fim class="form-control" type="time" %}
+            {% endif %}
+        </div>
+
+        <div class="form-group col-md-2">
+            <label>{{form.qt_alunos.label}}</label>
+            {% if form.is_bound %}
+            {% if form.qt_alunos.errors %}
+            {% render_field form.qt_alunos class="form-control is-invalid" type="number" %}
+            {% for error in form.qt_alunos.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+            {% else %}
+            {% render_field form.qt_alunos class="form-control is-valid" type="number" %}
+            {% endif %}
+            {% else %}
+            {% render_field form.qt_alunos class="form-control" type="number" %}
+            {% endif %}
+        </div>
+
+    </div>
+
+    <div class="form-row justify-content-between">
+
+        <div class="form-group col-md-7">
+            <label>{{form.roteiro.label}}</label>
+            {% if form.is_bound %}
+            {% if form.roteiro.errors %}
+            {% render_field form.roteiro class="form-control is-invalid" %}
+            {% for error in form.roteiro.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+            {% else %}
+            {% render_field form.roteiro class="form-control is-valid"%}
+            {% endif %}
+            {% else %}
+            {% render_field form.roteiro class="form-control-file" %}
+            {% endif %}
+        </div>
+
+        <div class="custom-control custom-switch col-md-4 ml-3 p-4">
+            {% render_field form.precisa_tecnico class="custom-control-input" type="checkbox"%}
+            <label class="custom-control-label" for="id_precisa_tecnico">{{form.precisa_tecnico.label}}</label>
+        </div>
+
+    </div>
+    <div class="form-row">
+
+        <div class="form-group col-md-12">
+            <label>{{form.observacoes.label}}</label>
+            {% if form.is_bound %}
+            {% if form.observacoes.errors %}
+            {% render_field form.observacoes class="form-control is-invalid" type="text" rows="2" %}
+            {% for error in form.observacoes.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+            {% else %}
+            {% render_field form.observacoes class="form-control is-valid" type="text" rows="2"%}
+            {% endif %}
+            {% else %}
+            {% render_field form.observacoes class="form-control" type="text" rows="2" %}
+            {% endif %}
+        </div>
+
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-md-3">
+            <i id="btn_ver_cesta" class="btn btn-block" data-toggle="" data-target="#modal_cesta">
+                <i class="fas fa-shopping-basket fa-w-16 fa-2x"></i>
+                <b>Visualizar Cesta</b><br>
+                <i id="qt_itens"></i><br>
+                <i id="qt_estouros"></i>
+            </i>
+            <a href="{%url 'cesta' %}" class="btn btn-block btn-warning"><i class="fa fa-tools"></i> Voltar para
+                Edição da Cesta</a>
+        </div>
+        <div class="form-group col-md-6">
+        </div>
+        <div class="form-group col-md-3">
+            <button type="submit" class="btn btn-lg btn-block btn-dark text-light">
+                <i class="fas fa-share text-warning"></i>
+                Enviar Solicitação</button>
+        </div>
+    </div>
+</form>
+
+
+<div class="modal fade" id="modal_cesta" tabindex="-1" role="dialog" aria-labelledby="Cesta">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header gradiente">
+                <h6 class="modal-title light"><i class="fas fa-shopping-basket p-1" style="color:#FFC107"></i> ITENS NA
+                    CESTA </h6>
+                <button type="button" class="close text-warning" data-dismiss="modal">&times;</button>
+            </div>
+            <div id="modal-body" class="modal-body bg-light">
+
+            </div>
+
+            <div class="modal-footer gradiente">
+                <button type="button" class="btn btn-outline-warning" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    Pegar_Cesta();
+
+    function Pegar_Cesta() {
+
+        var modal = '<ul class="list-group">';
+        var qt_total = 0;
+        var qt_estouro = 0;
+        Object.keys(sessionStorage).forEach(function (key) {
+            var eq = JSON.parse(sessionStorage.getItem(key));
+
+            modal +=
+                '<li class = "list-group-item d-flex justify-content-between align-items-center shadow my-1">';
+            modal += '<span><i class="pr-1 fas '
+            if (eq.tipo == 1) {
+                modal += 'fa-wrench text-success"></i> ';
+            } else {
+                modal += 'fa-oil-can text-info"></i>';
+            }
+            modal += eq.nome;
+            modal += '</span><span>';
+            if (eq.quantidade <= eq.estoque) {
+
+                modal += '<i class="badge gradiente mx-1">' + eq.quantidade + " " + eq.unidade + '</i>';
+                modal += '<i class="text-success fas fa-check"></i>';
+            } else {
+                modal += '<small><i class="text-danger ml-2">Estoque excedido</i></small>';
+                modal += '<i class="badge badge-danger mx-1">' + eq.quantidade + " " + eq.unidade + '</i>';
+                modal += '<i class="text-danger fas fa-exclamation"></i>';
+                qt_estouro += 1;
+
+            }
+            modal += '</span>';
+            modal += "</li>";
+            qt_total += 1;
+        });
+        modal += "</ul>";
+        document.getElementById("modal-body").innerHTML = modal;
+        butao = document.getElementById("btn_ver_cesta");
+        if (qt_total == 0) {
+            document.getElementById("qt_itens").innerHTML = "Nenhum item na cesta";
+            butao.classList.add("btn-outline-secondary");
+            butao.setAttribute("data-targed", "");
+        } else {
+            document.getElementById("qt_itens").innerHTML = qt_total + " itens selecionados";
+            butao.setAttribute("data-toggle", "modal");
+            if (qt_estouro > 0) {
+                butao.classList.add("btn-outline-danger");
+                document.getElementById("qt_estouros").innerHTML = qt_estouro + " sem estoque suficiente";
+            } else
+                butao.classList.add("btn-outline-dark");
+        }
+
+        var campo = document.getElementById('id_itens_json');
+
+        var itens = '';
+        Object.keys(sessionStorage).forEach(function (key) {
+            item = JSON.parse(sessionStorage.getItem(key));
+            itens += '{ "id":' + item.id + ', ';
+            itens += '"solicitado":' + item.quantidade + ', ';
+            itens += '"estoque":' + item.estoque + ' },';
+        });
+        if (itens != '') {
+            itens = '[' + itens.substring(0, (itens.length - 1)) + ']';
+        }
+        campo.value = itens;
+    }
+</script>
+{% endblock %}

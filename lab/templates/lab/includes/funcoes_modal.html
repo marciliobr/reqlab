@@ -1,0 +1,55 @@
+<script>
+    function enviar_modal(id, mensagem) {
+        var id_form = "form_" + id;
+        var id_input = "input_" + id;
+        var id_button = 'button_' + id;
+        var id_label = "label_" + id;
+
+        var form = document.getElementById(id_form);
+        var data = document.getElementById(id_input).value;
+        var label = document.getElementById(id_label);
+
+
+        if (form.checkValidity() === false) {
+            form.className = 'was-validated';
+            $("label#" + id_label).text('Valor inválido!');
+            $("label#" + id_label).addClass("text-danger")
+        } else {
+            var form_data = $(form).serialize();
+            var form_url = $(form).attr("action");
+            var form_method = $(form).attr("method").toUpperCase();
+            $.ajax({
+                type: form_method,
+                url: form_url,
+                data: form_data,
+                cache: false,
+                success: function (retorno) {
+                    $("label#" + id_label).text(retorno);
+                    if (retorno == "1") {
+                        $("label#" + id_label).text(mensagem);
+                        $("label#" + id_label).removeClass("text-danger")
+                        $("label#" + id_label).addClass("text-success")
+                        $("button#" + id_button).detach();
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1200);
+                    } else {
+                        $("label#" + id_label).addClass("text-danger")
+                        $("label#" + id_label).text(retorno);
+                    }
+                },
+                error: function (dados) {
+                    $("label#" + id_label).addClass("text-danger")
+                    $("label#" + id_label).text("Ocorreu um erro inesperado!");
+                }
+            });
+        }
+    }
+
+
+    function limpar_mensagem_modal(id) {
+        var id_label = "label_" + id;
+        var label = document.getElementById(id_label);
+        label.innerHTML = '';
+    }
+</script>

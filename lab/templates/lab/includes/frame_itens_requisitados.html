@@ -1,0 +1,65 @@
+<div>
+    {% if requisicao.qt_itens > 0 %}
+    <ul class="list-group list-group-flush">
+        {% for item_r in requisicao.itens_requisitados %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <span>
+                <i
+                    class="fas {%if item_r.item.tipo == 1 %} fa-wrench text-success{%else%} fa-oil-can text-info {%endif%} "></i>
+                {{item_r.item.nome}}<br /><small class="text-muted"> ({{item_r.item.descricao}})</small>
+            </span>
+            <small>
+                <span>
+                    SOLICITADO:<b> {{item_r.solicitado}}</b><small>{{item_r.item.unidade.codigo}}</small>
+                    {% if item_r.solicitado > item_r.estoque %}
+                    /<i class="text-muted">{{item_r.estoque}}</i>
+                    <i class="fas fa-exclamation-triangle text-danger estoque-up"></i>
+                    {%endif%}<br />
+
+                    {% if requisicao.status_pos_aprovacao %}
+                    APROVADO:<b> {{item_r.aprovado}}</b><small>{{item_r.item.unidade.codigo}}</small>
+                    {% if item_r.c_aprovado %}
+                    <i class="fas fa-comment-dots text-info" data-toggle="tooltip" data-placement="top"
+                        title="{{item_r.c_aprovado}}"></i>
+                    {% endif %}
+                    {% if item_r.aprovado < item_r.solicitado %}
+                    <i class="fas fa-exclamation-triangle text-warning aprovado-down"></i>
+                    {%endif%}<br />
+                    {% if requisicao.status_pos_devolucao %}
+                    DEVOLVIDO:<b> {{item_r.devolvido}}</b><small>{{item_r.item.unidade.codigo}}</small>
+                    {% if item_r.c_devolvido %}
+                    <i class="far fa-comments text-info" data-toggle="tooltip" data-placement="top"
+                        title="{{item_r.c_devolvido}}"></i>
+                    {% endif %}
+                    {% if item_r.devolvido < item_r.aprovado and item_r.item.tipo == 1 %}
+                    <i class="fas fa-exclamation-triangle text-danger devolvido-faltando"></i>
+
+                    {%endif%}<br />
+                    {% endif %}
+                    {% endif %}
+
+                </span>
+            </small>
+        </li>
+        {%endfor%}
+    </ul>
+    {%else%}
+    &varnothing; <em class="">(nenhum item solicitado)</em>
+    {%endif%}
+</div>
+<script>
+    $(document).ready(function () {
+        $('.estoque-up').tooltip({
+            title: "A quantidade solicitada foi superior ao estoque!",
+            animation: true
+        });
+        $('.aprovado-down').tooltip({
+            title: "A quantidade aprovado foi inferior ao solicitado!",
+            animation: true
+        });
+        $('.devolvido-faltando').tooltip({
+            title: "A quantidade devolvida foi inferior à quantidade aprovada, isto não deveria aconter para bens patrimoniais!",
+            animation: true
+        });
+    });
+</script>

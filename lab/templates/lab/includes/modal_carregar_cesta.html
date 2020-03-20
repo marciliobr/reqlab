@@ -1,0 +1,60 @@
+<div class="modal fade" id="modal_carregar_cesta" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header gradiente">
+                <h6 class="modal-title light"><i class="fas fa-shopping-basket p-1" style="color:#FFC107"></i> CESTAS
+                    SALVAS </h6>
+                <button type="button" class="close text-warning" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body bg-light">
+                <ul class="list-group">
+                    {% for cesta in user.cestas.all %}{%if cesta.escopo_id == request.session.escopo_id  %}
+                    <li id="cesta_{{cesta.id}}" class="list-group-item d-flex justify-content-between">
+                        <span class="mr-1">
+                            <i class="btn far bg-dark fa-trash-alt mr-2 text-danger excluir-cesta"
+                                onclick="apagar_cesta('{{ cesta.id }}', '{{ cesta.url_delete }}');" +></i>
+                            {{cesta.nome}}<i class="text-muted small">( {{cesta.qt_itens}} itens)</i>
+                        </span>
+
+
+                        <a class="badge badge-dark p-2 mb-1" href="#" data-dismiss="modal"
+                            onclick="carregar_cesta_salva('{{ cesta.itens_to_load }}')">
+                            <i class="fas fa-plus text-warning"></i>
+                            Carregar </a>
+                    </li>
+                   {%endif%} {% endfor %}
+                </ul>
+            </div>
+
+            <div class="modal-footer gradiente">
+                <button class="btn btn-warning" type="button" data-dismiss="modal">
+                    Cancelar
+                </button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function apagar_cesta(id, url) {
+        var cesta = document.getElementById("cesta_" + id);
+        $.get(url, function (data, status) {
+
+            if (status == "success") {
+                cesta.remove();
+            } else {
+                alert("Erro: " + data);
+            }
+
+        });
+    }
+
+    function carregar_cesta_salva(cesta) {
+        JSON.parse(cesta).forEach(function carregar(item) {
+            AddItem(item.id, item.nome, item.descricao, item.tipo, item.unidade, item.quantidade, item.estoque);
+
+        })
+
+    }
+</script>

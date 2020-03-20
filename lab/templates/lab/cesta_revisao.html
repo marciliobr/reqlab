@@ -1,0 +1,183 @@
+{% extends "lab/layout.html" %}
+{% load static %}
+{% block css_page %}
+
+{% endblock %}
+
+{% block conteudo %}
+<div class="d-flex row align-items-start  justify-content-between mb-2">
+  <h4 class="fa mb-4 text-secondary"><i id="title-logo" class="fas fa-shopping-basket p-1" style="color:#ad850b"></i>
+    REVISÃO DE CESTA PRÉ-APROVAÇÃO</h4>
+  <div class="row flex-row-reverse justify-content-center">
+    <button type="button" class="btn btn-dark p-2 mb-1 order-1" onclick="aprovar()">
+      <i class="far fa-thumbs-up text-warning" aria-hidden="true"></i>
+      Confirmar Aprovação
+    </button>
+    <button type="button" class="btn btn-warning mr-3 mb-1 order-2" data-toggle="collapse"
+      data-target="#section-comentario">
+      <i class="fas fa-comments text-dark"></i>
+      Adicionar Observação</button>
+  </div>
+</div>
+
+<!--Observação-->
+<section id="section-comentario" class="collapse">
+  <i class="fas text-secondary"><i class="fas fa-comments p-1" style="color:#ad850b"></i>OBSERVAÇÃO A ADICIONAR </i>
+  <div class="border-top border-warning p-2 mb-3">
+    <div class="form-row">
+      <div class="col-12">
+        <textarea id="add_observacao" type="text" class="form-control" rows="5" maxlength="300" name="observacao"
+          required></textarea>
+        <small><i class="float-right text-right text-secondary"> (máximo de 300 caracteres)</i></small>
+      </div>
+    </div>
+  </div>
+
+</section>
+<i class="fas text-secondary"><i class="fas fa-tools p-1" style="color:#ad850b"></i> ITENS SOLICITADOS </i>
+<section class="border-top border-warning p-2 mb-3">
+
+  <!--Lista de Itens Solicitados-->
+  <div id="lista-solicitados" class="mb-4">
+    <ul class="list-group">
+      {% if requisicao.itens%}
+      {% for item_r in requisicao.itens_requisitados %}
+      <li id="item-requisitado-{{item_r.item.id}}"
+        class="list-group-item list-group-item-secondary mb-1 pt-0 pb-1 px-2">
+        <div class="d-flex row justify-content-between">
+          <div class="col-md-5">
+            <small class="fa text-secondary mx-1">ITEM</small><br />
+            <i
+              class="fas {%if item_r.item.tipo == item_r.item.TIPOS_DE_ITENS.FERRAMENTA %} fa-wrench text-success{%else%} fa-oil-can text-info {%endif%} "></i>
+            {{item_r.item.nome}}<small class="text-muted"> ({{item_r.item.descricao}})</small>
+          </div>
+          <div class="col-md-2 d-flex justify-content-between text-center">
+            <div class="px-2">
+              <small class="fa text-secondary">SOLICITADO</small><br />
+              <strong>{{item_r.solicitado}}</strong><small class="text-muted">/{{item_r.estoque}}</small>
+            </div>
+            <div class="px-2">
+              <small class="fa text-secondary">ESTOQUE</small><br />
+              {{item_r.item.estoque}}<i class="small text-secondary"> {{item_r.item.unidade.codigo}}</i>
+              {%if item_r.item.estoque < item_r.solicitado %} <i
+                class="fas fa-exclamation-triangle text-danger"></i>{%endif%}
+            </div>
+          </div>
+          <div class="col-md-1 text-left">
+            <small class="fa">APROVADO</small><br />
+            <input class="form-control item_" style="max-width: 8em;" id_item={{item_r.item.id}} type="number" min="0"
+              max="{{item_r.item.estoque}}"
+              value="{%if item_r.item.estoque < item_r.solicitado %}{{item_r.item.estoque}}{%else%}{{item_r.solicitado}}{%endif%}">
+          </div>
+          <div class="col-md-auto">
+            <small class="fa text-secondary">COMENTÁRIO</small><br />
+            <input id="comentario_{{item_r.item.id}}" class="form-control input-sm" type="text"
+              value="{%if item_r.item.estoque < item_r.solicitado %} Quantidade solicitada superior ao estoque!{%endif%}">
+          </div>
+        </div>
+      </li>
+      {% endfor %}
+      {% else %}
+      <li class="list-group-item list-group-item-dark mb-1 pt-0 pb-1 px-2">
+        <i class="fas fa-asterisk    ">
+          Nenhum item solicitado pelo requisitante!
+        </i>
+      </li>
+      {% endif %}
+
+    </ul>
+  </div>
+
+  <button id="btn-mostrar-caixa" data-toggle="collapse" data-target="#section-caixa-pesquisa" class="btn btn-secondary">
+    <i class="fas fa-plus"></i>
+    Adicionar Item Não Solicitado</button>
+
+  <section id="section-caixa-pesquisa" class="collapse">
+    <div>
+      {% with requisicao.itens_nao_solicitados as itens  %}
+      {% include 'lab/includes/caixa_pesquisa_itens.html' %}
+      {% endwith %}
+    </div>
+  </section>
+</section>
+<section>
+  <form id="form-aprovacao" onsubmit="carregar_dados();" method="post" action="{%url 'requisicao_aprovar'%}" novalidate>
+    {% csrf_token %}
+    <input id="form-aprovacao-id" name="id" type="hidden" value="{{requisicao.id}}">
+    <input id="form-aprovacao-itens" name="itens_aprovados" type="hidden">
+    <input id="form-aprovacao-observacao" name="observacao" type="hidden">
+  </form>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  function AddItem(id, nome, descricao, tipo, unidade, quantidade, estoque) {
+    var tabela = document.getElementById('lista-solicitados');
+    resultado = document.getElementById('item-resultado-' + id)
+    var i = '';
+    i += '<li  id="item-requisitado-' + id + '" class = "list-group-item list-group-item-warning mb-1 pt-0 pb-1 px-2">';
+    i += '<div class="d-flex row justify-content-between">';
+    i += '<div class="col-md-5">';
+    i += '<small class="fa text-secondary mx-1">ITEM</small><br/>';
+    i += '<i class="fas ';
+    i += tipo == '1' ? 'fa-wrench text-success"></i>' : 'fa-oil-can text-info"></i>';
+    i += ' ' + nome + '<small class="text-muted"> (' + descricao + ')</small>';
+    i += '</div>';
+    i += '<div class="col-md-2 d-flex justify-content-between text-center">';
+    i += '<div class="px-2">';
+    i += '<small class="fa text-secondary">SOLICITADO</small><br/>';
+    i += '<strong>---</strong>';
+    i += '</div>';
+    i += '<div class="px-2">';
+    i += '<small class="fa text-secondary">ESTOQUE</small><br/>';
+    i += estoque;
+    i += '<i class="small text-secondary"> ' + unidade + '</i>';
+    i += '</div>';
+    i += '</div>';
+    i += '<div class="col-md-1 text-left">';
+    i += '<small class="fa text-dark">APROVADO</small><br/>';
+    i += '<input class="form-control item_" id_item="' + id + '" style="max-width: 8em;" type="number" min="0" max="' +
+      estoque + '" value="' + quantidade + '">';
+    i += '</div>';
+    i += '<div class="col-md-auto">';
+    i += '<small class="fa text-secondary">COMENTÁRIO</small><br/>';
+    i += '<input id="comentario_' + id +
+      '" class="form-control input-sm" type="text" value="Avaliado como necessário!">';
+    i += '</div>';
+    //i+= '<button type="button" class="close text-danger text-right" onclick=document.getElementById("item-requisitado-'+id +'").remove();>&times;</button>';    
+    i += '</div>';
+
+    tabela.innerHTML += i;
+    resultado.parentNode.removeChild(resultado);
+  }
+
+  function aprovar() {
+    var f_form = document.getElementById("form-aprovacao");
+    var f_itens = document.getElementById("form-aprovacao-itens");
+    var f_observacao = document.getElementById("form-aprovacao-observacao");
+
+    var item_id = ''
+    var itens = '';
+    Array.from(document.getElementsByClassName('item_')).forEach(function (item, index) {
+      item_id = item.getAttribute('id_item')
+      itens += '{"id":"' + item_id + '",';
+      itens += '"aprovado":"' + item.value + '", ';
+      itens += '"c_aprovado":"' + document.getElementById('comentario_' + item_id).value + '"},';
+    });
+    if (itens != '') {
+      itens = '[' + itens.substring(0, (itens.length - 1)) + ']';
+    }
+
+    var add_observacao = document.getElementById("add_observacao");
+
+    f_itens.value = itens;
+    f_observacao.value = add_observacao !== null ? add_observacao.value : ''
+
+    f_form.submit();
+
+  }
+</script>
+
+{% endblock %}

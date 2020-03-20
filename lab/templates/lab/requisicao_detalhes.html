@@ -1,0 +1,175 @@
+{% extends "lab/layout.html"%}
+{% block conteudo %}
+<!--Cabeçalho-->
+<div class="d-flex row justify-content-between mb-5">
+    <h4 class="fa text-secondary"><i class="fas fa-edit p-1" style="color:#ad850b"></i>
+        {%if is_to_print %}
+        RELATÓRIO DE REQUISIÇÃO
+        {%else%}
+        DETALHES DA REQUISIÇÃO
+        {%endif%}
+    </h4>
+    {%if not is_to_print %}
+    {%if user.is_staff %}
+    <div class="mb-1">
+
+        <!--Botão de Rejeição-->
+        {%if requisicao.status_rejeitavel %}
+        <a class="btn btn-dark text-light shadow mx-1" data-toggle="modal" data-target="#r_{{requisicao.id}}" href="#"><i
+                class="fas fa-thumbs-down text-warning" aria-hidden="true"></i> Rejeitar</a>
+        {% with requisicao as requisicao %}
+        {% include 'lab/includes/modal_rejeitar.html' %}
+        {% endwith %}
+        {%endif%}
+
+        <!--Botão de Aprovação-->
+        {% if requisicao.status_aprovavel %}
+        <a class="btn btn-dark text-light shadow mx-1" href="{% url 'cesta_revisao' requisicao.id %}"><i
+                class="fas fa-thumbs-up text-warning" aria-hidden="true"></i> Aprovar</a>
+        {% endif %}
+
+        <!--Botão de Atender -->
+        {% if requisicao.status_atendivel %}
+        <a class="btn btn-dark text-light shadow mx-1" href="{% url 'cesta_devolucao' requisicao.id %}"><i
+                class="fas fa-clipboard-check text-warning" aria-hidden="true"></i> Atendido</a>
+        {% endif %}
+
+        <!--Botão de Finalizar-->
+        {% if requisicao.status_finalizavel %}
+        <a class="btn btn-dark text-light shadow mx-1" data-toggle="modal" data-target="#f_{{requisicao.id}}" href="#"><i
+                class="fas fa-stop-circle text-warning" aria-hidden="true"></i> Finalizar</a>
+        {% with requisicao as requisicao %}
+        {% include 'lab/includes/modal_finalizacao.html' %}
+        {% endwith %}
+        {% endif %}
+    </div>
+    {%endif%}
+    <!--Botão de para o Professor-->
+    {% if requisicao.status_finalizavel and requisicao.professor == user and not user.is_staff %}
+    <div class="mb-1">
+        <a class="btn btn-dark text-light shadow" data-toggle="modal" data-target="#f_{{requisicao.id}}" href="#"><i
+                class="fas fa-stop-circle text-warning" aria-hidden="true"></i> Finalizar</a>
+        {% with requisicao as requisicao %}
+        {% include 'lab/includes/modal_finalizacao.html' %}
+        {% endwith %}
+    </div>
+    {% endif %}
+
+    <a class="btn btn-warning mb-1" target="_blank" href="{% url 'requisicao_detalhes' requisicao.id %}?print=True"><i
+            class="fa fa-print" aria-hidden="true"></i> Imprimir</a>
+    {%endif%}
+</div>
+
+<div>
+
+    {% if not mostrar %}
+    <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+        <strong>Informação Protegida!</strong> Você não é o responsável por esta requisição, portando dados mais
+        detalhados foram ocultados.
+    </div>
+    {% endif %}
+
+
+    <!--Requisicção-->
+    <i class="fas text-secondary"><i class="fas fa-file p-1" style="color:#ad850b"></i> REQUISIÇÃO </i>
+    <section class="border-top border-warning p-2 mb-3">
+        <b>ID: </b> {{requisicao.id}} <br />
+        <b>Escopo: </b> {{requisicao.escopo}} <br />
+        <b>Status: </b> <strong class="text-{{requisicao.status_class}}">{{requisicao.status_string}}</strong> <br />
+    </section>
+
+    <!--Formulário da Requisição-->
+    <i class="fas text-secondary"><i id="title-logo" class="fas fa-edit p-1" style="color:#ad850b"></i> DADOS DO
+        FORMULÁRIO</i>
+    <section class="border-top border-warning p-2 mb-3">
+        <b>Professor:</b> {{requisicao.professor}} <br />
+        <b>Disciplina: </b>{{requisicao.disciplina}} <br />
+        <b>Tipo de Atividade: </b>{{requisicao.tipo_atividade_string}} <br />
+        {% if mostrar %}<b>Prática: </b>{{requisicao.pratica}}<br />{% endif %}
+        <b>Laboratório: </b>{{requisicao.laboratorio}} <br />
+        <b>Data: </b> {{requisicao.data}} <br />
+        <b>Horário: </b> De {{requisicao.hora_inicio}} às {{requisicao.hora_fim}}<br />
+        <b>Quantidade de Alunos: </b> {{requisicao.qt_alunos}}<br />
+        <b>Precisa o técnico estar presente?: </b>
+        {% if requisicao.precisa_tecnico %}
+        Sim
+        {% else %}
+        Não
+        {%endif%} <br />
+        {% if mostrar %}
+        <b>Roteiro: </b>
+        {% if requisicao.roteiro %}
+        <a href="../../media/{{requisicao.roteiro}}" target="_blank">{{requisicao.roteiro}}</a>
+        {% else %}
+        &varnothing; <em class="">(sem roteiro)</em>
+        {%endif%} <br />
+        <b>Observações: </b>
+        {% if requisicao.observacoes %}
+        <small>{{requisicao.observacoes}}</small>
+        {% else %}
+        &varnothing; <em class="">(sem observações)</em>
+        {%endif%} <br />
+        {% endif %}
+    </section>
+    {% if mostrar %}
+    <!--Historico-->
+    <a data-toggle="collapse" data-target="#historico" href="#"><i class="fas text-secondary"><i
+                class="fas fa-history p-1" style="color:#ad850b"></i> HISTÓRICO &downdownarrows; </i></a>
+    <section class="border-top border-warning p-2 mb-3">
+        <div {% if not is_to_print %}id="historico" class="collapse" {% endif %}>
+            <ol class="list small">
+                {% for acao in requisicao.historico %}
+                <li> {{acao}}</li>
+                {% endfor %}
+            </ol>
+        </div>
+    </section>
+
+
+
+    <!--Itens Solicitados-->
+    <a data-toggle="collapse" data-target="#itens-requeridos" href="#"><i class="fas text-secondary"><i
+                class="fas fa-tools p-1" style="color:#ad850b"></i> ITENS
+            SOLICITADOS/APROVADOS/DEVOLVIDOS &downdownarrows; </i></a>
+    <section class="border-top border-warning p-2 mb-3">
+        <div {% if not is_to_print %} id="itens-requeridos" class="collapse" {% endif %}>
+            {% with requisicao as requisicao %}
+            {% include 'lab/includes/frame_itens_requisitados.html' %}
+            {% endwith %}
+        </div>
+    </section>
+
+
+
+    <!--Ocorrencias-->
+    <i class="fas text-secondary"><i class="fas fa-flag-checkered p-1" style="color:#ad850b"></i> OCORRÊNCIAS </i>
+    <section class="border-top border-warning p-2 mb-3">
+        {% if requisicao.ocorrencias %}
+        <small>{{requisicao.ocorrencias}}</small>
+        {% else %}
+        &varnothing; <em class="">(sem ocorrências)</em>
+        {%endif%}
+    </section>
+    {%endif%}
+</div>
+
+{%endblock%}
+
+
+{% block scripts %}
+<!--Abrir janela de impressão-->
+{%if is_to_print %}
+<script>
+    Imprimir();
+
+    function Imprimir() {
+        window.print();
+    }
+</script>
+{%endif%}
+
+
+{% include "lab/includes/funcoes_modal.html" %}
+
+
+{%endblock%}

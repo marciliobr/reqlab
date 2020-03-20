@@ -1,0 +1,46 @@
+<div class="mt-2 bg-light p-2 border-dark shadow">
+    <p class="text-dark">
+        <i class="fas fa-exclamation-triangle text-warning fa-2x"></i>
+        Se este é seu primeiro login, significa que seu usuário foi criado com sucesso, mas antes de poder utilizar
+        o sistema será necessário que um dos técnicos responsáveis autorize seu acesso.</p>
+
+    <a class="badge badge-dark p-2 mb-1" data-toggle="modal" data-target="#modal_tecnicos" href="#">
+        <i class="fas fa-users text-warning"></i>
+        Ver Técnicos</a>
+</div>
+<div class="modal fade" id="modal_tecnicos" tabindex="-1" role="dialog" aria-labelledby="modal_tecnicos">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header gradiente">
+                <h6 class="modal-title warning"><i class="fas fa-users p-1" style="color:#FFC107"></i>LISTA DE TÉCNICOS
+                    ATIVOS</h6>
+                <button type="button" class="close text-warning" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body bg-light">
+                <ul class="list-group small">
+                    
+                    {% for escopo in escopos  %}
+                    <i class="block gradiente px-2 mt-3">{{escopo|upper}}</i>
+                    {% for tec in escopo.responsaveis %}
+                    {% if tec.first_name%}
+                    <li class="list-group-item shadow mb-1">{{tec.get_full_name}} <b class="ml-3">e-mail:</b><i
+                            class="text-primary"> {{tec.email}}</i></li>
+                    
+                    {%endif%}
+                    {%empty%}
+                    <li class="list-group-item shadow mb-1">Nenhum técnico cadastrado</li>
+                    {% endfor %}
+                       
+                    
+                    {%empty%}
+                    <li class="list-group-item shadow mb-1">Nenhum técnico cadastrado</li>
+                    {% endfor %}
+                </ul>
+
+            </div>
+            <div class="modal-footer gradiente">
+                <button class="btn btn-warning" type="button" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>

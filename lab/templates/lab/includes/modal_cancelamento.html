@@ -1,0 +1,55 @@
+<div class="modal fade" id="c_{{requisicao.id}}" tabindex="-1" role="dialog" aria-labelledby="detalhes da requisicao">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header gradiente">
+                <h6 class="modal-title light"><i class="fas fa-search p-1" style="color:#FFC107"></i> CANCELAR
+                    REQUISIÇÃO &rarrw; <em class="text-warning"> (ID:{{requisicao.id}})</em></h6>
+                <button type="button" class="close text-warning" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body bg-light">
+                <!--Requisicção-->
+                <i class="fas text-secondary"><i class="fas fa-file p-1" style="color:#ad850b"></i> REQUISIÇÃO </i>
+                <section class="border-top border-warning p-2 mb-3">
+                    <b>ID: </b>{{requisicao.id}} <br />
+                    <b>Tipo de Atividade: </b>{{requisicao.tipo_atividade_string}} <br />
+                    <b>Disciplina: </b>{{requisicao.disciplina}} <br />
+                    <b>Data: </b> {{requisicao.data}} <br />
+                    <b>Horário: </b> De {{requisicao.hora_inicio}} às {{requisicao.hora_fim}} <br />
+                </section>
+
+                <!--Confirmação-->
+                <i class="fas text-secondary"><i class="fas fa-clipboard-check p-1" style="color:#ad850b"></i>
+                    CONFIRMAÇÃO DE CANCELAMENTO </i>
+                <section class="border-top border-warning p-2">
+                    <form id="form_c_{{requisicao.id}}" class="needs-validation" method="post"
+                        action="{%url 'registrar_cancelamento_requisicao'%}" novalidate>
+                        {% csrf_token %}
+                        <div class="form-row">
+                            <div class="col-12">
+                                <input name="id" type="hidden" value="{{requisicao.id}}">
+                                <small><label>Confirme o ID da requisição para realizar o cancelamento:</label></small>
+                            </div>
+                            <div class="col-5">
+                                <input id="input_c_{{requisicao.id}}"
+                                    onchange="limpar_mensagem_modal('c_{{requisicao.id}}');" type="number"
+                                    min="{{requisicao.id}}" max="{{requisicao.id}}" class="form-control"
+                                    name="id_confirmacao" placeholder="Repita o ID" required>
+                            </div>
+                            <div class="small col-12 mt-1">
+                                <label id="label_c_{{requisicao.id}}"></label>
+                            </div>
+                        </div>
+
+                    </form>
+                </section>
+
+            </div>
+            <div class="modal-footer gradiente">
+                <button id="button_c_{{requisicao.id}}" class="btn btn-warning" type="button"
+                    onclick="enviar_modal('c_{{requisicao.id}}','Cancelamento realizado com sucesso!')">
+                    Confirmar Cancelamento
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

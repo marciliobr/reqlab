@@ -1,0 +1,11 @@
+{% load i18n %}
+<caption class="fas text-secondary"><i class="fas fa-filter p-1" style="color:#ad850b"></i>
+    <i class="text-secondary">{% blocktrans with filter_title=title %} By {{ filter_title }} {% endblocktrans %}</i>
+</caption>
+<ul>
+    {% for choice in choices %}
+    <li {% if choice.selected %} class="selected" {% endif %}>
+        <a class="text-dark" href="{{ choice.query_string|iriencode }}"
+            title="{{ choice.display }}">{{ choice.display }}</a></li>
+    {% endfor %}
+</ul>
