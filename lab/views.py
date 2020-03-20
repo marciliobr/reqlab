@@ -648,9 +648,15 @@ def reports_home(request):
 @staff_member_required(login_url='/login/')
 def report_estoque_geral(request):
     assert isinstance(request, HttpRequest)
+    consumo = request.GET.get('consumo', False) == 'True'
+    permanente = request.GET.get('permanente', False) == 'True'
+    if consumo == permanente:
+        consumo, permanente = True, True
     data = {
         'is_to_print': request.GET.get('print', False) == 'True',
-        'itens_consumo': Item.objects.filter(status=STATUS_BASICO.ATIVO, tipo=Item.TIPOS_DE_ITENS.MATERIAL, escopo__id=ESCOPO_ID(request)),
-        'itens_permanente': Item.objects.filter(status=STATUS_BASICO.ATIVO, tipo=Item.TIPOS_DE_ITENS.FERRAMENTA, escopo__id=ESCOPO_ID(request))
+        'itens_consumo': Item.objects.filter(status=STATUS_BASICO.ATIVO, tipo=Item.TIPOS_DE_ITENS.MATERIAL, escopo__id=ESCOPO_ID(request)) if consumo else [],
+        'itens_permanente': Item.objects.filter(status=STATUS_BASICO.ATIVO, tipo=Item.TIPOS_DE_ITENS.FERRAMENTA, escopo__id=ESCOPO_ID(request)) if permanente else [],
+        'mostrar_consumo':consumo,
+        'mostrar_permanente':permanente
     }
     return render(request, 'lab/reports/estoque_geral.html', data)

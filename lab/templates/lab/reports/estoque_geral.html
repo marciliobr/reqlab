@@ -3,41 +3,53 @@
 <!--Cabeçalho-->
 <div class="d-flex row justify-content-between mb-5">
     <h4 class="fa text-secondary"><i class="fas fa-list p-1" style="color:#ad850b"></i>
-        RELATÓRIO GERAL DE ESTOQUE - {{request.session.escopo_nome|upper}}
+        {%if mostrar_consumo and mostrar_permanente %}
+            RELATÓRIO GERAL DE ESTOQUE
+        {% elif mostrar_consumo and not mostrar_permanente %} 
+            RELATÓRIO DE MATERIAIS DE CONSUMO
+        {% elif not mostrar_consumo and  mostrar_permanente %} 
+            RELATÓRIO DE BENS PERMANENTES
+        {% else %}
+            <i class="text">ATENÇÃO - ESTE RELATÓRIO PARECE ESTAR INCONSISTENTE - REFAÇA A OPERAÇÃO! </i>
+        {% endif %}
+         - {{request.session.escopo_nome|upper}}
     </h4>
     {%if not is_to_print %}
-    <a class="btn btn-warning mb-1" target="_blank" href="{% url 'report_estoque_geral' %}?print=True"><i
+    <a class="btn btn-warning mb-1" target="_blank" href="{% url 'report_estoque_geral' %}?{% if mostrar_consumo %}consumo=True&{% endif %}{% if mostrar_permanente %}permanente=True&{%endif%}print=True"><i
             class="fa fa-print" aria-hidden="true"></i> Imprimir</a>
     {%endif%}
 </div>
 
 <div>
     <!--Material de Consumo-->
+    {% if mostrar_consumo %}
     <a data-toggle="collapse" data-target="#consumo" href="#" class="fas text-secondary"><i class="fas fa-oil-can p-1" style="color:#ad850b"></i> MATERIAL DE CONSUMO &downdownarrows;</a>
     <section class="border-top border-warning p-2 mb-3 shadow">
-        <div {% if not is_to_print %} id="consumo" class="collapse" {% endif %}>
+        <div {% if not is_to_print and mostrar_consumo and mostrar_permanente%} id="consumo" class="collapse" {% endif %}>
             <ul class="list-group">
                 {% for item in itens_consumo %}
                     <li class="list-group-item d-flex justify-content-left align-items-center border">{{item}}<small class="text-muted" > ({{item.descricao}})</small>
-                        <span class="badge badge-warning badge p-2 mx-3">{{item.estoque}} <small>{{item.unidade.codigo}}</small></span>
+                        <span class="badge badge-{% if item.estoque > 0 %}warning{% else %}danger{% endif%} badge p-2 mx-3">{{item.estoque}} <small>{{item.unidade.codigo}}</small></span>
                     </li>
                 {% endfor %}
             </ul>
         </div>
     </section>
-
+    {% endif %}
 
     <!--Material Permanente-->
+    
+    {% if mostrar_permanente %}
     <a data-toggle="collapse" data-target="#permanente" href="#" class="fas text-secondary"><i class="fas fa-wrench p-1" style="color:#ad850b"></i> BENS PERMANENTES &downdownarrows;</a>
     <section class="border-top border-warning p-2 mb-3 shadow">
-        <div {% if not is_to_print %} id="permanente" class="collapse" {% endif %}>
+        <div {% if not is_to_print and mostrar_consumo and mostrar_permanente%} id="permanente" class="collapse" {% endif %}>
             <ul class="list-group">
                 {% for item in itens_permanente %}
                 <li class="list-group-item d-flex justify-content-left align-items-center border">
                     <span>
                         {{item}}<small class="text-muted" > ({{item.descricao}})</small></small>
                     </span>
-                    <span class="badge badge-warning badge p-2 mx-3">{{item.estoque}} <small>{{item.unidade.codigo}}</small></span>
+                    <span class="badge badge-{% if item.estoque > 0 %}warning{% else %}danger{% endif%} badge p-2 mx-3">{{item.estoque}} <small>{{item.unidade.codigo}}</small></span>
                     <span class="small">
                     
                     {% if item.ferramentas.all%}
@@ -50,15 +62,15 @@
                             </ul>
                         </div>
                     {% endif %}
-                        
-                    
                 </span>   
                 </li>
                 {% endfor %}
             </ul>
         </div>
     </section>
-    
+    {% endif %}
+   
+
 {%endblock%}
 
 
