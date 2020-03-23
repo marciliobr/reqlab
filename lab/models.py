@@ -182,7 +182,7 @@ class Item(models.Model):
         verbose_name='Descrição',
     )
 
-    class TIPOS_DE_ITENS(models.IntegerChoices):
+    class ITEM_TIPO(models.IntegerChoices):
         FERRAMENTA = 1, _('Bem Permanente')
         MATERIAL = 2, _('Material de Consumo')
 
@@ -190,10 +190,10 @@ class Item(models.Model):
 
     tipo = models.PositiveSmallIntegerField(
         db_index=True,
-        choices=TIPOS_DE_ITENS.choices,
+        choices=ITEM_TIPO.choices,
         help_text='Tipo Item',
         verbose_name='Tipo',
-        default=TIPOS_DE_ITENS.FERRAMENTA,
+        default=ITEM_TIPO.FERRAMENTA,
     )
 
     unidade = models.ForeignKey(
@@ -222,7 +222,7 @@ class Item(models.Model):
 
     @property
     def estoque(self):
-        if self.tipo == self.TIPOS_DE_ITENS.FERRAMENTA:
+        if self.tipo == self.ITEM_TIPO.FERRAMENTA:
             try:
                 return Ferramenta.objects.filter(status=SB.ATIVO, item=self).count()
             except Ferramenta.DoesNotExist:
@@ -235,7 +235,7 @@ class Item(models.Model):
 
     @estoque.setter
     def estoque(self, value):
-        if self.tipo == self.TIPOS_DE_ITENS.MATERIAL:
+        if self.tipo == self.ITEM_TIPO.MATERIAL:
             try:
                 e = EstoqueMaterial.objects.get(item=self)
                 e.quantidade = value
@@ -255,7 +255,7 @@ class Item(models.Model):
     def baixar_estoque(requisicao, desfazer=False, devolucao=False):
         fator = -1 if desfazer else 1
         for ir in requisicao.itens_requisitados:
-            if ir.item.tipo == Item.TIPOS_DE_ITENS.MATERIAL:
+            if ir.item.tipo == Item.ITEM_TIPO.MATERIAL:
                 hist_estoque = HistoricoEstoque(
                     item=ir.item, requisicao=requisicao)
                 if devolucao:
@@ -273,7 +273,7 @@ class Ferramenta(models.Model):
         blank=False,
         null=False,
         on_delete=models.PROTECT,
-        limit_choices_to={'tipo': Item.TIPOS_DE_ITENS.FERRAMENTA},
+        limit_choices_to={'tipo': Item.ITEM_TIPO.FERRAMENTA},
         related_name='ferramentas'
     )
 
@@ -315,7 +315,7 @@ class EstoqueMaterial(models.Model):
         blank=False,
         null=False,
         on_delete=models.PROTECT,
-        limit_choices_to={'tipo': Item.TIPOS_DE_ITENS.MATERIAL},
+        limit_choices_to={'tipo': Item.ITEM_TIPO.MATERIAL},
         related_name='estoqueMateriais'
     )
     quantidade = models.IntegerField(
@@ -721,7 +721,7 @@ class HistoricoEstoque(models.Model):
         on_delete=models.PROTECT,
         related_name="historicosEstoque",
         limit_choices_to={"status": SB.ATIVO,
-                          "tipo": Item.TIPOS_DE_ITENS.MATERIAL}
+                          "tipo": Item.ITEM_TIPO.MATERIAL}
     )
     data_hora = models.DateTimeField(
         _("Data/Hora"), auto_now_add=True)
