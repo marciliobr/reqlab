@@ -522,8 +522,8 @@ class Requisicao(models.Model):
         if self.status == SR.FINALIZADO:
             return 'secondary'
         if self.status == SR.CANCELADO:
-            return 'ligth'
-        return 'ligth'
+            return 'dark'
+        return 'dark'
 
     @property
     def itens_requisitados(self):
@@ -822,7 +822,7 @@ class Cesta(models.Model):
 class Auditoria(models.Model):
     quem = models.ForeignKey(
         "Usuario",
-        verbose_name=_("Quem realizou a acão"),
+        verbose_name=_("Quem realizou a ação"),
         on_delete=models.PROTECT)
 
     class MODELOS(models.IntegerChoices):
@@ -918,9 +918,9 @@ class ConfigLab(models.Model):
         PERMITIR_REQUISICAO_SABADO = 5, _("#Permitir requisições aos sábados")
         PERMITIR_REQUISICAO_FERIADO = 6, _("#Permitir requisições em feriados")
         HORARIO_MINIMO_REQUISICAO = 7, _(
-            '#Horário mínimo para requisião(HHMM)')
+            '#Horário mínimo para requisição(HHMM)')
         HORARIO_MAXIMO_REQUISICAO = 8, _(
-            '#Horário máximo para requisião(HHMM)')
+            '#Horário máximo para requisição(HHMM)')
         ENVIAR_EMAIL_PROFESSOR = 9, _('#Enviar e-mail aos professores')
         ENVIAR_EMAIL_REQUISITANTE = 10, _('#Enviar e-mail aos requisitantes')
         ENVIAR_EMAIL_TECNICOS = 11, _('#Enviar e-mail aos técnicos')

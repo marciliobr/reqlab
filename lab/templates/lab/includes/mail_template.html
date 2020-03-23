@@ -45,7 +45,7 @@
     <b>Matrícula: </b>{{objeto.username}} <br />
     <b>Nome Completo: </b>{{objeto.get_full_name}} <br />
     <b>E-mail: </b>{{objeto.email}} <br />
-    <b>Escopo Padrão: </b>{{objeto.escopo_default}} <br />
+    <b>Escopo Padrão: </b>{% if objeto.escopo_default %}{{objeto.escopo_default}}{% else %}&varnothing; Nenhum escopo padrão definido {% endif %} <br />
     <b>Último Login: </b>{{objeto.last_login}} <br />
     {% endif %}
 
