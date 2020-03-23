@@ -654,8 +654,8 @@ def report_estoque_geral(request):
         consumo, permanente = True, True
     data = {
         'is_to_print': request.GET.get('print', False) == 'True',
-        'itens_consumo': Item.objects.filter(status=SB.ATIVO, tipo=Item.ITEM_TIPO.MATERIAL, escopo__id=ESCOPO_ID(request)) if consumo else [],
-        'itens_permanente': Item.objects.filter(status=SB.ATIVO, tipo=Item.ITEM_TIPO.FERRAMENTA, escopo__id=ESCOPO_ID(request)) if permanente else [],
+        'itens_consumo': Item.objects.filter(status=SB.ATIVO, tipo=Item.ITEM_TIPO.CONSUMO, escopo__id=ESCOPO_ID(request)) if consumo else [],
+        'itens_permanente': Item.objects.filter(status=SB.ATIVO, tipo=Item.ITEM_TIPO.PERMANENTE, escopo__id=ESCOPO_ID(request)) if permanente else [],
         'mostrar_consumo':consumo,
         'mostrar_permanente':permanente
     }
