@@ -192,8 +192,7 @@ class Item(models.Model):
         db_index=True,
         choices=ITEM_TIPO.choices,
         help_text='Tipo Item',
-        verbose_name='Tipo',
-        default=ITEM_TIPO.PERMANENTE,
+        verbose_name='Tipo'
     )
 
     unidade = models.ForeignKey(
@@ -201,8 +200,7 @@ class Item(models.Model):
         blank=False,
         null=False,
         on_delete=models.PROTECT,
-        limit_choices_to={'status': SB.ATIVO},
-        default=SB.ATIVO,
+        limit_choices_to={'status': SB.ATIVO}
     )
     status = models.PositiveSmallIntegerField(
         db_index=True,
