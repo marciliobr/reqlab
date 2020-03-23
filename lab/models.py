@@ -72,13 +72,6 @@ class Usuario(AbstractUser):
         else:
             grupo.user_set.remove(self)
 
-    @property
-    def requisicoes_realizadas(self, status=0):
-        if status > 0:
-            return list(Requisicao.objects.filter(professor=self, status=status))
-        else:
-            return list(Requisicao.objects.filter(professor=self))
-
     def get_escopos(self):
         return Escopo.objects.filter(status=STATUS_BASICO.ATIVO)
 
