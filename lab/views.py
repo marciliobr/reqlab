@@ -14,7 +14,7 @@ from django.utils.safestring import mark_safe
 from decouple import config
 
 from .forms import *
-from .models import SR, STATUS_BASICO
+from .models import SR, SB
 from .models import Auditoria as Aud
 from .models import (Aviso, Cesta, ConfigLab, Escopo, EstoqueMaterial, Ferramenta,
                      Item, Requisicao, Usuario)
@@ -31,7 +31,7 @@ def ESCOPO_ID(request): return request.session.get(ESCOPO_ID_REF, 0)
 
 
 def ESCOPO(request): return get_object_or_404(
-    Escopo, status=STATUS_BASICO.ATIVO, id=ESCOPO_ID(request))
+    Escopo, status=SB.ATIVO, id=ESCOPO_ID(request))
 
 
 def home(request):
@@ -41,14 +41,14 @@ def home(request):
         new_escopo = request.GET.get('escopo', 0)
         if new_escopo:
             escopo = get_object_or_404(
-                Escopo, id=new_escopo, status=STATUS_BASICO.ATIVO)
+                Escopo, id=new_escopo, status=SB.ATIVO)
             request.session[ESCOPO_ID_REF] = escopo.id
             request.session[ESCOPO_NOME_REF] = escopo.nome
             limpar_cesta = True
 
         if not ESCOPO_ID(request):
             escopo_default = request.user.escopo_default
-            if escopo_default and escopo_default.status == STATUS_BASICO.ATIVO:
+            if escopo_default and escopo_default.status == SB.ATIVO:
                 request.session[ESCOPO_ID_REF] = escopo_default.id
                 request.session[ESCOPO_NOME_REF] = escopo_default.nome
             else:
@@ -60,9 +60,9 @@ def home(request):
     agora = datetime.datetime.now()
     
     quadro_avisos = list(Aviso.objects.filter(
-        status=STATUS_BASICO.ATIVO, inicio__lte=agora, fim__gte=agora, escopo__id = ESCOPO_ID(request)))
+        status=SB.ATIVO, inicio__lte=agora, fim__gte=agora, escopo__id = ESCOPO_ID(request)))
     quadro_avisos +=  list(Aviso.objects.filter(
-        status=STATUS_BASICO.ATIVO, inicio__lte=agora, fim__gte=agora, escopo=None))
+        status=SB.ATIVO, inicio__lte=agora, fim__gte=agora, escopo=None))
     
     return render(request, 'lab/index.html', {"quadro_avisos": quadro_avisos, 'limpar_cesta': limpar_cesta})
 
@@ -154,7 +154,7 @@ def edit_user(request):
 def cesta(request):
     assert isinstance(request, HttpRequest)
     itens = Item.objects.filter(
-        status=STATUS_BASICO.ATIVO, escopo__id=ESCOPO_ID(request))  # ativos
+        status=SB.ATIVO, escopo__id=ESCOPO_ID(request))  # ativos
     return render(request, "lab/cesta.html", {"itens": itens})
 
 
@@ -654,8 +654,8 @@ def report_estoque_geral(request):
         consumo, permanente = True, True
     data = {
         'is_to_print': request.GET.get('print', False) == 'True',
-        'itens_consumo': Item.objects.filter(status=STATUS_BASICO.ATIVO, tipo=Item.TIPOS_DE_ITENS.MATERIAL, escopo__id=ESCOPO_ID(request)) if consumo else [],
-        'itens_permanente': Item.objects.filter(status=STATUS_BASICO.ATIVO, tipo=Item.TIPOS_DE_ITENS.FERRAMENTA, escopo__id=ESCOPO_ID(request)) if permanente else [],
+        'itens_consumo': Item.objects.filter(status=SB.ATIVO, tipo=Item.TIPOS_DE_ITENS.MATERIAL, escopo__id=ESCOPO_ID(request)) if consumo else [],
+        'itens_permanente': Item.objects.filter(status=SB.ATIVO, tipo=Item.TIPOS_DE_ITENS.FERRAMENTA, escopo__id=ESCOPO_ID(request)) if permanente else [],
         'mostrar_consumo':consumo,
         'mostrar_permanente':permanente
     }

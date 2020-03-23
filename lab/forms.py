@@ -7,14 +7,14 @@ from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 
-from .models import ConfigLab, Laboratorio, Requisicao, Usuario, Escopo, STATUS_BASICO
+from .models import ConfigLab, Laboratorio, Requisicao, Usuario, Escopo, SB
 
 
 def list_admin():
     try:
         return render_to_string(
             template_name="lab/includes/nao_autorizado.html",
-            context={"escopos": Escopo.objects.filter(status= STATUS_BASICO.ATIVO)}
+            context={"escopos": Escopo.objects.filter(status= SB.ATIVO)}
         )
     except Exception:
         return ''
@@ -89,7 +89,7 @@ class RequisicaoForm(forms.ModelForm):
     def __init__(self, escopo_id=0, usuario=None,  **kwargs):
         super(RequisicaoForm,self).__init__(**kwargs)
         if escopo_id:
-            self.fields['laboratorio'].queryset = Laboratorio.objects.filter(status=STATUS_BASICO.ATIVO, escopo__id=escopo_id)
+            self.fields['laboratorio'].queryset = Laboratorio.objects.filter(status=SB.ATIVO, escopo__id=escopo_id)
         if usuario and not usuario.is_staff:
             self.fields['professor'].queryset =  Usuario.objects.filter(id=usuario.id)
 

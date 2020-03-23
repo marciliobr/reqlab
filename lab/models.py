@@ -8,7 +8,7 @@ from django.shortcuts import reverse
 from django.utils.translation import gettext_lazy as _
 
 
-class STATUS_BASICO(models.IntegerChoices):
+class SB(models.IntegerChoices):
     ATIVO = 1, _('Ativo')
     INATIVO = 2, _('Inativo')
 
@@ -52,7 +52,7 @@ class Usuario(AbstractUser):
                                        on_delete=models.SET_NULL,
                                        related_name='usuarios',
                                        limit_choices_to={
-                                           'status': STATUS_BASICO.ATIVO},
+                                           'status': SB.ATIVO},
                                        null=True,
                                        blank=True
                                        )
@@ -73,7 +73,7 @@ class Usuario(AbstractUser):
             grupo.user_set.remove(self)
 
     def get_escopos(self):
-        return Escopo.objects.filter(status=STATUS_BASICO.ATIVO)
+        return Escopo.objects.filter(status=SB.ATIVO)
 
     @property
     def escopo_selecionado(self):
@@ -121,10 +121,10 @@ class Laboratorio(models.Model):
 
     status = models.PositiveSmallIntegerField(
         db_index=True,
-        choices=STATUS_BASICO.choices,
+        choices=SB.choices,
         help_text='Situação do Laboratório',
         verbose_name='Status',
-        default=STATUS_BASICO.ATIVO
+        default=SB.ATIVO
     )
 
     class Meta:
@@ -152,10 +152,10 @@ class Unidade(models.Model):
 
     status = models.PositiveSmallIntegerField(
         db_index=True,
-        choices=STATUS_BASICO.choices,
+        choices=SB.choices,
         help_text='Situação da unidade',
         verbose_name='Status',
-        default=STATUS_BASICO.ATIVO,
+        default=SB.ATIVO,
     )
 
     class Meta:
@@ -201,15 +201,15 @@ class Item(models.Model):
         blank=False,
         null=False,
         on_delete=models.PROTECT,
-        limit_choices_to={'status': STATUS_BASICO.ATIVO},
-        default=STATUS_BASICO.ATIVO,
+        limit_choices_to={'status': SB.ATIVO},
+        default=SB.ATIVO,
     )
     status = models.PositiveSmallIntegerField(
         db_index=True,
-        choices=STATUS_BASICO.choices,
+        choices=SB.choices,
         help_text='Situação do Item',
         verbose_name='Status',
-        default=STATUS_BASICO.ATIVO,
+        default=SB.ATIVO,
     )
 
     class Meta:
@@ -224,7 +224,7 @@ class Item(models.Model):
     def estoque(self):
         if self.tipo == self.TIPOS_DE_ITENS.FERRAMENTA:
             try:
-                return Ferramenta.objects.filter(status=STATUS_BASICO.ATIVO, item=self).count()
+                return Ferramenta.objects.filter(status=SB.ATIVO, item=self).count()
             except Ferramenta.DoesNotExist:
                 return 0
         else:
@@ -249,7 +249,7 @@ class Item(models.Model):
 
     @property
     def get_lista_itens_ativos(self):
-        return Item.objects.filter(status=STATUS_BASICO.ATIVO)
+        return Item.objects.filter(status=SB.ATIVO)
 
     @staticmethod
     def baixar_estoque(requisicao, desfazer=False, devolucao=False):
@@ -295,10 +295,10 @@ class Ferramenta(models.Model):
 
     status = models.PositiveSmallIntegerField(
         db_index=True,
-        choices=STATUS_BASICO.choices,
+        choices=SB.choices,
         help_text='Situação do bem',
         verbose_name='Status',
-        default=STATUS_BASICO.ATIVO,
+        default=SB.ATIVO,
     )
 
     class Meta:
@@ -374,7 +374,7 @@ class Requisicao(models.Model):
         blank=False,
         null=False,
         on_delete=models.PROTECT,
-        limit_choices_to={'status': STATUS_BASICO.ATIVO},
+        limit_choices_to={'status': SB.ATIVO},
         verbose_name='Laboratório',
     )
 
@@ -542,7 +542,7 @@ class Requisicao(models.Model):
     @property
     def itens_nao_solicitados(self):
         todos_itens = Item.objects.filter(
-            status=STATUS_BASICO.ATIVO, escopo=self.escopo)
+            status=SB.ATIVO, escopo=self.escopo)
         return [i for i in todos_itens if i not in self.itens.all()]
 
     def atualizar_itens(self, value, incluir_novos=True):
@@ -720,7 +720,7 @@ class HistoricoEstoque(models.Model):
         verbose_name=_("Item"),
         on_delete=models.PROTECT,
         related_name="historicosEstoque",
-        limit_choices_to={"status": STATUS_BASICO.ATIVO,
+        limit_choices_to={"status": SB.ATIVO,
                           "tipo": Item.TIPOS_DE_ITENS.MATERIAL}
     )
     data_hora = models.DateTimeField(
@@ -801,7 +801,7 @@ class Cesta(models.Model):
                 for i in json.loads(self.itens):
                     try:
                         item = Item.objects.get(
-                            id=i['id'], status=STATUS_BASICO.ATIVO)
+                            id=i['id'], status=SB.ATIVO)
 
                         i_json = {
                             "id": item.id,
@@ -981,8 +981,8 @@ class Aviso(models.Model):
     importante = models.BooleanField(_("em destaque"))
     status = models.PositiveSmallIntegerField(
         _("status"),
-        choices=STATUS_BASICO.choices,
-        default=STATUS_BASICO.ATIVO
+        choices=SB.choices,
+        default=SB.ATIVO
     )
 
     class Meta:
@@ -1002,8 +1002,8 @@ class Escopo(models.Model):
                                       )
     status = models.PositiveSmallIntegerField(
         _("status"),
-        choices=STATUS_BASICO.choices,
-        default=STATUS_BASICO.ATIVO
+        choices=SB.choices,
+        default=SB.ATIVO
     )
 
     class Meta:
