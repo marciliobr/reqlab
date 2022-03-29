@@ -24,18 +24,18 @@ class LoginForm(AuthenticationForm):
     username = forms.CharField(max_length=10,
                                widget=forms.TextInput({
                                    'class': 'form-control',
-                                   'placeholder': 'Mátricula (SIAPE)'}))
+                                   'placeholder': 'Login'}))
     password = forms.CharField(label=_("Password"),
                                widget=forms.PasswordInput({
                                    'class': 'form-control',
-                                   'placeholder': 'Senha do SUAPE'}))
+                                   'placeholder': 'Senha local! Não utilize a senha do SUAP aqui'}))
 
     error_messages = {
         'invalid_login': _(
             "Digite uma matrícula e senha corretas."
             " Observe que os dois campos podem fazer distinção entre maiúsculas e minúsculas."
-            " ATENÇÃO - Como esta autenticação depende do correto funcinamento do SUAP, "
-            " vefirique se o SUAP está funcionando corretamente antes de tentar novamente."
+            " ATENÇÃO - A autenticação utilizando o SUAP é o método padrão utilizado pelo REQLAB."
+            
         ),
         'inactive': mark_safe('Esta conta não está ativa!' + list_admin()),
     }
