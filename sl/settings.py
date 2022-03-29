@@ -22,7 +22,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'widget_tweaks',
-    'django_user_agents'
+    'django_user_agents',
+    'social_django'
 ]
 
 MIDDLEWARE = [
@@ -101,9 +102,14 @@ AUTH_USER_MODEL = 'lab.Usuario'
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
+SOCIAL_AUTH_SUAP_KEY = config('SOCIAL_AUTH_SUAP_KEY')
+SOCIAL_AUTH_SUAP_SECRET = config('SOCIAL_AUTH_SUAP_SECRET')
+
+
 AUTHENTICATION_BACKENDS = [
-    'lab.backend.SUAPBackend',
+    'lab.backend.SUAPBackendOauth2',
     'django.contrib.auth.backends.ModelBackend',
 ]
 
 LOGIN_REDIRECT_URL = '/'
+
