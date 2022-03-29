@@ -42,7 +42,7 @@ class Usuario(AbstractUser):
     is_professor = models.BooleanField(
         help_text='Indica se o usuário é um professor ou não?',
         verbose_name='É professor?',
-        default=True
+        default=False
     )
 
     _escopo = None
