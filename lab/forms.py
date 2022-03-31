@@ -97,8 +97,7 @@ class EditUserForm(forms.ModelForm):
 
     class Meta:
         model = Usuario
-        fields = '__all__'
-        exclude = ['password', 'date_joined', 'username']
+        fields = ['escopo_default']
         widgets = {'last_login': forms.DateTimeInput(attrs={'readonly': ''}),
                    'date_joined': forms.DateTimeInput(attrs={'readonly': ''}),
                    'username': forms.TextInput(attrs={'readonly': ''})}

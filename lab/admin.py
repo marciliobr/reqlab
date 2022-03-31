@@ -15,15 +15,18 @@ class LaboratorioAdmin(admin.ModelAdmin):
 
 @admin.register(Usuario)
 class UsuarioAdmin(admin.ModelAdmin):
-    list_display = ('username', 'first_name', 'is_active',
+    list_display = ('username', 'first_name','last_name', 'is_active',
                     'is_professor', 'is_staff','escopo_default')
     list_filter = ('is_active', 'is_staff', 'is_professor', 'escopo_default')
     exclude = ['groups', 'user_permissions', 'is_superuser',
                'password']
-    readonly_fields = ('last_login', 'date_joined')
+    readonly_fields = ('username','first_name','last_name','email','last_login', 'date_joined')
     # Desabilitar delete
 
     def has_delete_permission(self, request, obj=None):
+        return False
+
+    def has_add_permission(self, request) -> bool:
         return False
 
 
