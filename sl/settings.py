@@ -4,10 +4,8 @@ from decouple import Csv, config
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 SECRET_KEY = config('SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv(), default='')
 
@@ -98,12 +96,18 @@ EMAIL_USE_SSL = config('EMAIL_USE_SSL', cast=bool)
 CELERY_BROKER_URL = config('CELERY_BROKER_URL')
 
 # Login
-AUTH_USER_MODEL = 'lab.Usuario'
 
+AUTH_USER_MODEL = 'lab.Usuario'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 SOCIAL_AUTH_SUAP_KEY = config('SOCIAL_AUTH_SUAP_KEY')
 SOCIAL_AUTH_SUAP_SECRET = config('SOCIAL_AUTH_SUAP_SECRET')
+SOCIAL_AUTH_USER_MODEL = 'lab.Usuario'
+SOCIAL_AUTH_REDIRECT_IS_HTTPS = config(
+    'SOCIAL_AUTH_REDIRECT_IS_HTTPS', default=False, cast=bool)
+# SOCIAL_AUTH_INACTIVE_USER_URL =
+SOCIAL_AUTH_UUID_LENGTH = config(
+    'SOCIAL_AUTH_UUID_LENGTH', default=3, cast=int)
 
 
 AUTHENTICATION_BACKENDS = [
@@ -112,4 +116,3 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 LOGIN_REDIRECT_URL = '/'
-

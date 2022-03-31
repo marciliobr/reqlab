@@ -28,35 +28,11 @@ class SUAPBackendOauth2(BaseOAuth2):
         if len(splitted_name) > 1:
             last_name = splitted_name[-1]
 
-        user = {}
-        user.setdefault('username', response[self.ID_KEY])
-        user.setdefault('first_name', first_name.strip())
-        user.setdefault('last_name', last_name.strip())
-        user.setdefault('email', response['email'])
-
-        user_local = self.get_user_local(user)
-
         return {
-            'username': user_local.username,
-            'first_name': user_local.first_name,
-            'last_name': user_local.last_name,
-            'email': user_local.email
+            'username': response[self.ID_KEY],
+            'first_name': first_name.strip(),
+            'last_name': last_name.strip(),
+            'email': response['email']
         }
 
-    def get_user_local(self, user: dict):
-        try:
-            user_local = Usuario.objects.get(username=user.get('username'))
-        except Usuario.DoesNotExist:  # Primeiro acesso - Cria o usuário
-            user_local.first_name = user.ger('first_name')
-            user_local.username = user.get('username'),
-            user_local.first_name = user.get('first_name'),
-            user_local.last_name = user.get('last_name'),
-            user_local.email = user.get('email')
-            user_local.save()
-            enviar_email.delay(subject="Novo usuário criado automaticamente",
-                               message="O usuário abaixo foi criado de forma automática, através de login do SUAP",
-                               mstype=3,
-                               admins=True,
-                               object_id=int(user_local.id)
-                               )
-        return user_local
+    
