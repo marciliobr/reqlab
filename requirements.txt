@@ -17,7 +17,7 @@ django-user-agents==0.4.0
 django-widget-tweaks==1.4.12
 idna==3.3
 kombu==5.2.4
-oauthlib==3.2.0
+oauthlib==3.2.2
 prompt-toolkit==3.0.28
 pycparser==2.21
 PyJWT==2.3.0
