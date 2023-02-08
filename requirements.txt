@@ -10,7 +10,7 @@ click==8.1.0
 click-didyoumean==0.3.0
 click-plugins==1.1.1
 click-repl==0.2.0
-cryptography==36.0.2
+cryptography==39.0.1
 defusedxml==0.7.1
 Django==4.0.3
 django-user-agents==0.4.0
